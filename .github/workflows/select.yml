@@ -26,7 +26,7 @@ jobs:
     # --- 关键点：根据输入判断是否运行 ---
     if: ${{ github.event.inputs.run_build == 'true' }} 
     steps:
-      - name: Running Build
+      - name: Running Build & Pack NTN
         run: echo "正在构建项目..."
 
   test:
