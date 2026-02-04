@@ -1,0 +1,50 @@
+name: Manual Select Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      # --- 定义勾选框 ---
+      run_build:
+        description: '执行构建任务 (Build)'
+        required: true
+        default: true
+        type: boolean
+      run_test:
+        description: '执行测试任务 (Test)'
+        required: true
+        default: true
+        type: boolean
+      run_deploy:
+        description: '执行部署任务 (Deploy)'
+        required: true
+        default: false    # 部署通常默认不勾选，防误触
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # --- 关键点：根据输入判断是否运行 ---
+    if: ${{ github.event.inputs.run_build == 'true' }} 
+    steps:
+      - name: Running Build
+        run: echo "正在构建项目..."
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build  # 通常测试依赖构建
+    # --- 关键点：即使依赖满足，也要看勾选状态 ---
+    # 注意：如果 build 被跳过，needs 会导致 test 也被跳过。
+    # 如果你想让它们独立运行，请移除 needs；
+    # 如果必须依赖，且想灵活控制，可以使用 always() 来穿透，或者像下面这样写逻辑：
+    if: ${{ github.event.inputs.run_test == 'true' }}
+    steps:
+      - name: Running Tests
+        run: echo "正在运行单元测试..."
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: ${{ github.event.inputs.run_deploy == 'true' }}
+    steps:
+      - name: Deploying
+        run: echo "正在部署到生产环境..."
