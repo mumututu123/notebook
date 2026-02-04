@@ -7,8 +7,7 @@ on:
       run_build:
         description: '执行构建任务 (Build)'
         required: true
-        default: true
-        type: boolean
+        type: string
       run_test:
         description: '执行测试任务 (Test)'
         required: true
