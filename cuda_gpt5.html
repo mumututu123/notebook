@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Page 1 - CUDA官方AI辅助能力</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:#0c0f14;
+    font-family:"Segoe UI","Microsoft YaHei",Arial,sans-serif;
+    color:#fff;
+  }
+  .slide{
+    width:1280px;height:720px;margin:0 auto;
+    background:linear-gradient(135deg,#0b0f14 0%,#121922 60%,#0b0f14 100%);
+    position:relative;overflow:hidden;
+    padding:34px 42px 26px 42px;
+  }
+  .topline{
+    position:absolute;left:0;top:0;width:100%;height:6px;
+    background:linear-gradient(90deg,#76b900 0%,#9fe11a 60%,#76b900 100%);
+  }
+  .header{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    margin-bottom:20px;
+  }
+  .title{font-size:34px;font-weight:800;letter-spacing:.3px}
+  .subtitle{font-size:15px;color:#b6c0cc;margin-top:8px}
+  .brand{
+    text-align:right;
+  }
+  .brand .main{font-size:28px;font-weight:800;color:#76b900}
+  .brand .sub{font-size:13px;color:#9aa6b2;margin-top:6px}
+  .summary{
+    margin-top:6px;
+    background:rgba(118,185,0,.10);
+    border:1px solid rgba(118,185,0,.35);
+    border-radius:12px;
+    padding:12px 16px;
+    color:#eaf6d0;
+    font-size:18px;font-weight:700;
+  }
+  .content{
+    display:grid;
+    grid-template-columns: 1.55fr .95fr;
+    gap:22px;
+    margin-top:18px;
+  }
+  .left{display:grid;grid-template-rows:auto auto 1fr;gap:16px}
+  .right{display:grid;grid-template-rows: 250px 1fr;gap:16px}
+  .panel{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:18px 18px 16px 18px;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);
+  }
+  .panel-title{
+    font-size:20px;font-weight:800;color:#76b900;margin-bottom:14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;background:#76b900}
+  .cards{
+    display:grid;grid-template-columns: repeat(3,1fr);gap:14px;
+  }
+  .card{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    border-top:4px solid #76b900;
+    border-radius:14px;
+    padding:14px;
+    min-height:190px;
+  }
+  .card h3{
+    margin:0 0 8px 0;font-size:18px;color:#fff;line-height:1.25
+  }
+  .tag{
+    display:inline-block;padding:3px 8px;border-radius:999px;
+    background:rgba(118,185,0,.14);color:#a7e332;font-size:11px;
+    font-weight:700;margin-bottom:10px;
+  }
+  .card p{
+    margin:6px 0;font-size:13px;color:#c7d0d9;line-height:1.55;
+  }
+  .kv{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:2px;
+  }
+  .metric{
+    background:rgba(118,185,0,.08);
+    border:1px solid rgba(118,185,0,.22);
+    border-radius:12px;padding:12px;
+  }
+  .metric .m1{font-size:13px;color:#bddc84;font-weight:700}
+  .metric .m2{font-size:24px;font-weight:800;margin-top:6px}
+  .metric .m3{font-size:12px;color:#b8c2cb;margin-top:4px}
+  .diagram{
+    height:100%;
+    border-radius:14px;
+    background:
+      linear-gradient(180deg,rgba(118,185,0,.08),rgba(255,255,255,.02)),
+      #0b1016;
+    border:1px solid rgba(118,185,0,.18);
+    padding:14px;
+    display:flex;flex-direction:column;
+  }
+  .diagram .cap{
+    font-size:13px;color:#c8d49a;margin-bottom:10px;
+  }
+  .flow{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:1}
+  .box{
+    flex:1;background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;padding:12px;text-align:center;
+  }
+  .box strong{display:block;font-size:16px;color:#fff;margin-bottom:6px}
+  .box span{font-size:12px;color:#bec8d1;line-height:1.5}
+  .arrow{font-size:28px;color:#76b900;font-weight:800}
+  .trendlist{display:grid;gap:10px}
+  .trend{
+    display:grid;grid-template-columns:30px 1fr;gap:10px;
+    align-items:flex-start;
+    background:rgba(255,255,255,.03);
+    border-radius:12px;padding:10px 12px;
+  }
+  .num{
+    width:30px;height:30px;border-radius:50%;
+    background:#76b900;color:#0b1016;font-weight:800;
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .trend b{color:#fff}
+  .trend div{font-size:13px;color:#c7d0d9;line-height:1.55}
+  .footer{
+    position:absolute;left:42px;right:42px;bottom:18px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:12px;color:#96a2af;
+  }
+  .source{max-width:760px;line-height:1.5}
+  .note-green{color:#a7e332;font-weight:700}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="topline"></div>
+
+  <div class="header">
+    <div>
+      <div class="title">CUDA算子开发调测：官方AI辅助能力与趋势洞察</div>
+      <div class="subtitle">NVIDIA Official AI Tooling for CUDA Kernel Development, Profiling and Optimization</div>
+    </div>
+    <div class="brand">
+      <div class="main">NVIDIA</div>
+      <div class="sub">CUDA / Nsight / NIM</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    一句话结论：NVIDIA 已形成“代码生成 + 性能分析解读 + 模型评测基准”的官方 AI 辅助闭环，正从编码助手演进到面向 Kernel 优化的专家助手。
+  </div>
+
+  <div class="content">
+    <div class="left">
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>官方能力版图</div>
+        <div class="cards">
+          <div class="card">
+            <div class="tag">Official Product</div>
+            <h3>Nsight Copilot</h3>
+            <p><b>定位：</b>官方 CUDA-aware AI assistant。</p>
+            <p><b>能力：</b>CUDA 问答、代码生成、代码改写、上下文补全。</p>
+            <p><b>形态：</b>VS Code 扩展 + Nsight Compute 集成。</p>
+          </div>
+          <div class="card">
+            <div class="tag">Profiler + AI</div>
+            <h3>Nsight Compute + Copilot</h3>
+            <p><b>定位：</b>把性能数据转成自然语言诊断。</p>
+            <p><b>能力：</b>围绕访存不合并、带宽瓶颈、Kernel 行为给出解释与优化建议。</p>
+            <p><b>价值：</b>缩短 Profile 报告解读链路。</p>
+          </div>
+          <div class="card">
+            <div class="tag">Evaluation Framework</div>
+            <h3>ComputeEval</h3>
+            <p><b>定位：</b>官方开源 CUDA 代码生成评测框架。</p>
+            <p><b>能力：</b>验证 LLM 生成 CUDA 代码的正确性与任务完成质量。</p>
+            <p><b>价值：</b>支持本地/私有模型选型与微调评估。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>对算子开发调测的直接价值</div>
+        <div class="kv">
+          <div class="metric">
+            <div class="m1">开发阶段</div>
+            <div class="m2">更快生成</div>
+            <div class="m3">将自然语言需求转成 CUDA 片段、Kernel 模板和改写建议</div>
+          </div>
+          <div class="metric">
+            <div class="m1">调测阶段</div>
+            <div class="m2">更快定位</div>
+            <div class="m3">将复杂 Profile 指标翻译为“瓶颈原因 + 可行动建议”</div>
+          </div>
+          <div class="metric">
+            <div class="m1">体系建设</div>
+            <div class="m2">可评测</div>
+            <div class="m3">借助 ComputeEval 对模型进行标准化选型、验收和持续优化</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>判断：NVIDIA 的领先点不只是“会写代码”，而是形成了工具闭环</div>
+        <div style="font-size:14px;color:#c7d0d9;line-height:1.7">
+          其核心不是单一聊天助手，而是把 <span class="note-green">CUDA 语义理解、Kernel 级性能分析、模型能力评测</span> 三部分串联起来：
+          一端连开发环境（VS Code），一端连性能工具（Nsight Compute），中间由 CUDA-aware 模型承接，底部再用 ComputeEval 做质量验证。
+          对领导层而言，这意味着它已经从“提效工具”走向“研发基础设施”。
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>官方示意图位</div>
+        <div class="diagram">
+          <div class="cap">建议替换为 NVIDIA 官方页面截图：Nsight Copilot / Nsight Compute with Copilot / ComputeEval 博文配图</div>
+          <div class="flow">
+            <div class="box">
+              <strong>VS Code</strong>
+              <span>CUDA 代码生成<br/>问答 / 补全 / 改写</span>
+            </div>
+            <div class="arrow">→</div>
+            <div class="box">
+              <strong>Nsight Copilot</strong>
+              <span>CUDA-aware LLM<br/>上下文理解</span>
+            </div>
+            <div class="arrow">→</div>
+            <div class="box">
+              <strong>Nsight Compute</strong>
+              <span>Profile 解读<br/>瓶颈建议</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>未来趋势洞察</div>
+        <div class="trendlist">
+          <div class="trend">
+            <div class="num">1</div>
+            <div><b>从“代码补全”走向“Kernel级专家问诊”</b><br/>AI 将越来越深地嵌入性能分析链路，而不是只停留在编辑器内。</div>
+          </div>
+          <div class="trend">
+            <div class="num">2</div>
+            <div><b>从单点工具走向端到端闭环</b><br/>代码生成、Profile 解读、基准评测、私有部署逐步纳入同一研发体系。</div>
+          </div>
+          <div class="trend">
+            <div class="num">3</div>
+            <div><b>从通用大模型走向领域专用模型</b><br/>CUDA-aware / GPU-aware 成为差异化关键，专用知识与性能语义理解是壁垒。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="source">
+      参考官方来源：NVIDIA Nsight Copilot 官网；NVIDIA Technical Blog《Announcing ComputeEval, an Open Source Framework for Evaluating LLMs on CUDA》；Nsight Compute 官方页面。
+    </div>
+    <div>Page 1 / 3</div>
+  </div>
+</div>
+</body>
+</html>
