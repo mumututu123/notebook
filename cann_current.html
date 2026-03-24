@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华为昇腾 CANN 算子开发：AI 辅助现状与差距分析</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            background-color: #f0f0f0; /* Light Background for contrast or keep dark */
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            overflow: hidden;
+            display: grid;
+            grid-template-rows: 80px 1fr 120px;
+            padding: 40px;
+            box-sizing: border-box;
+            border-top: 4px solid #c7000b; /* Huawei Red */
+        }
+
+        /* Header Section */
+        .header {
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+            color: #c7000b; /* Huawei Red */
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo span { color: #fff; }
+
+        /* Main Content Grid */
+        .content {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 40px;
+            padding-top: 30px;
+        }
+
+        /* Left Column: Capabilities */
+        .capabilities-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-title {
+            color: #c7000b;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 22px;
+            background-color: #c7000b;
+            margin-right: 10px;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #555;
+            padding: 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .card h4 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.4;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            vertical-align: middle;
+            border: 1px solid #555;
+        }
+
+        /* Right Column: Visuals & Gaps */
+        .visual-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .mockup-container {
+            flex: 1;
+            background-color: #1e1e1e; /* MindStudio Dark */
+            border: 1px solid #444;
+            border-radius: 8px;
+            position: relative;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            color: #d4d4d4;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px #000;
+        }
+
+        .code-line { margin-bottom: 4px; }
+        .keyword { color: #569cd6; } /* Blue */
+        .type { color: #4ec9b0; } /* Teal */
+        .comment { color: #6a9955; }
+        
+        .ai-popup {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: #252526;
+            border: 1px solid #c7000b;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        
+        .ai-popup-header {
+            font-weight: bold;
+            color: #c7000b;
+            margin-bottom: 5px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Gap Analysis Box */
+        .gap-box {
+            background: rgba(199, 0, 11, 0.05); /* Faint Red */
+            padding: 15px;
+            border: 1px dashed #c7000b;
+            border-radius: 4px;
+        }
+
+        .gap-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .gap-list li {
+            font-size: 13px;
+            color: #ddd;
+            margin-bottom: 8px;
+            list-style-type: none;
+            position: relative;
+        }
+
+        .gap-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: -20px;
+            font-size: 10px;
+            top: 2px;
+        }
+
+        .comparison-tag {
+            font-size: 10px;
+            background-color: #444;
+            padding: 1px 4px;
+            border-radius: 2px;
+            color: #aaa;
+            margin-left: 5px;
+        }
+
+        /* Footer */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+        
+        .highlight-text {
+            color: #c7000b;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <div class="title">昇腾 CANN 算子开发：AI 辅助现状与差距分析</div>
+                <div class="subtitle">Ascend C Development: CodeArts Capabilities & Gap Analysis</div>
+            </div>
+            <div class="logo">HUAWEI <span style="margin-left:8px;">Ascend</span></div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Left: Current Capabilities -->
+            <div class="capabilities-section">
+                <div class="section-title">官方 AI 辅助工具集 (Current Toolchain)</div>
+
+                <div class="card">
+                    <h4>1. 基础代码生成 <span class="tag">CodeArts Snap</span></h4>
+                    <p><strong>现状：</strong>基于盘古大模型（Pangu）的通用编程助手，已集成至 MindStudio。支持 <strong>Ascend C</strong> 基础语法补全。<br>
+                    <strong>能力：</strong>可生成简单的 Tiling（切分）逻辑搬运代码，减少样板代码输入。</p>
+                </div>
+
+                <div class="card">
+                    <h4>2. 智能调优引擎 <span class="tag">AOE (Ascend Optimization Engine)</span></h4>
+                    <p><strong>现状：</strong>CANN 体系中最成熟的“自动化”工具（非 LLM 生成式）。<br>
+                    <strong>能力：</strong>针对算子性能，利用搜索算法自动寻找最佳的 Block/Buffer 配置。
+                    <br><em style="color:#888; font-size:12px;">*注：这是基于策略搜索的 AI，而非基于语义理解的生成式 AI。</em></p>
+                </div>
+
+                <div class="card">
+                    <h4>3. 算子孪生调试 <span class="tag">MindStudio Simulation</span></h4>
+                    <p><strong>现状：</strong>提供 CPU 侧的孪生模拟运行环境。<br>
+                    <strong>能力：</strong>虽然不具备 AI 诊断功能，但提供了类似 Nsight 的流水线视图，是目前 AI 介入的前置基础。</p>
+                </div>
+            </div>
+
+            <!-- Right: Visuals & Gaps -->
+            <div class="visual-section">
+                <!-- Mockup of MindStudio -->
+                <div class="mockup-container">
+                    <div style="border-bottom: 1px solid #333; padding-bottom:5px; margin-bottom:10px; font-size:10px; color:#666;">MindStudio - add_custom.cpp</div>
+                    <div class="code-line"><span class="keyword">class</span> KernelAdd {</div>
+                    <div class="code-line"><span class="keyword">public</span>:</div>
+                    <div class="code-line">&nbsp;&nbsp;<span class="type">__aicore__</span> <span class="keyword">inline void</span> Process() {</div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Asking CodeArts to init buffers...</span></div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;pipe.InitBuffer(inQueueX, BUFFER_NUM, ...);</div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Tiling calculation logic</span></div>
+                    <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;LocalTensor&lt;DType&gt; xLocal = inQueueX.AllocTensor&lt;DType&gt;();</div>
+                    <div class="code-line">&nbsp;&nbsp;}</div>
+                    <div class="code-line">};</div>
+
+                    <div class="ai-popup">
+                        <div class="ai-popup-header">
+                            <span>CodeArts Snap (Ascend)</span>
+                            <span>Beta</span>
+                        </div>
+                        <div style="font-size: 11px; color: #ccc;">
+                            已根据 Ascend C 编程规范，为您生成了基于 Double Buffer 的流水线初始化代码。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gap Analysis (The Critical Part) -->
+                <div class="gap-box">
+                    <div class="section-title" style="font-size: 18px; margin-bottom: 10px;">关键缺失能力 (Gap Analysis vs CUDA)</div>
+                    <ul class="gap-list">
+                        <li>
+                            <strong>缺乏算子级“AI 诊断医生”：</strong>
+                            <br><span style="color:#999; font-size:12px;">现状：MSProfiler 仅提供图表数据。</span>
+                            <br><span style="color:#c7000b; font-size:12px;">差距：缺少类似 Nsight Copilot 的“自然语言瓶颈解读”（如直接指出 AICore 搬运流水线断裂原因）。</span>
+                        </li>
+                        <li>
+                            <strong>LLM 对硬件理解深度不足：</strong>
+                            <br><span style="color:#999; font-size:12px;">现状：CodeArts 更多是基于 C++ 语法的补全。</span>
+                            <br><span style="color:#c7000b; font-size:12px;">差距：无法像 CUDA Copilot 那样理解 Warp Divergence 或 Bank Conflict 等深层硬件行为。</span>
+                        </li>
+                        <li>
+                            <strong>交互式调优体验断层：</strong>
+                            <br><span style="color:#999; font-size:12px;">现状：AOE 是离线黑盒工具。</span>
+                            <br><span style="color:#c7000b; font-size:12px;">差距：开发者无法与工具对话来微调生成的算子代码，缺乏 Interactive 体验。</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div>报告日期：2026.03 | 汇报部门：AI 基础软件部</div>
+            <div>建议：<span class="highlight-text">利用 CodeArts 提升编码速度，但需依赖资深专家进行性能精调 (Manual Tuning)。</span></div>
+        </div>
+    </div>
+
+</body>
+</html>
