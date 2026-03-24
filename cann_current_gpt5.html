@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Page 2 - 昇腾官方AI辅助现状与缺口</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:#f5f6f8;
+    font-family:"Segoe UI","Microsoft YaHei",Arial,sans-serif;color:#222;
+  }
+  .slide{
+    width:1280px;height:720px;margin:0 auto;background:#fff;
+    position:relative;overflow:hidden;padding:34px 42px 24px 42px;
+  }
+  .topline{
+    position:absolute;left:0;top:0;width:100%;height:6px;
+    background:linear-gradient(90deg,#7f0014 0%,#b3001b 55%,#7f0014 100%);
+  }
+  .header{
+    display:flex;justify-content:space-between;align-items:flex-start;
+  }
+  .title{font-size:34px;font-weight:800;color:#222}
+  .subtitle{font-size:15px;color:#6b7280;margin-top:8px}
+  .brand{text-align:right}
+  .brand .main{font-size:28px;font-weight:800;color:#9f1024}
+  .brand .sub{font-size:13px;color:#7a7f89;margin-top:6px}
+  .summary{
+    margin-top:16px;
+    background:#fff5f6;border:1px solid #f0c8cf;border-radius:12px;
+    padding:12px 16px;color:#7f0014;font-size:18px;font-weight:700;
+  }
+  .content{
+    margin-top:18px;
+    display:grid;grid-template-columns:1.12fr .88fr;gap:22px;
+  }
+  .panel{
+    border:1px solid #ebecef;border-radius:16px;background:#fff;
+    padding:18px;box-shadow:0 10px 24px rgba(21,24,28,.05);
+  }
+  .panel-title{
+    font-size:20px;font-weight:800;color:#9f1024;margin-bottom:14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;background:#9f1024}
+  .left{display:grid;grid-template-rows:auto auto;gap:16px}
+  .cards{display:grid;grid-template-columns:1fr;gap:12px}
+  .card{
+    border:1px solid #eceff3;border-left:5px solid #9f1024;
+    border-radius:12px;padding:14px 14px 12px 14px;background:#fcfcfd;
+  }
+  .card h3{margin:0 0 6px 0;font-size:18px;color:#1f2937}
+  .tag{
+    display:inline-block;padding:3px 8px;border-radius:999px;
+    background:#fbe9ec;color:#9f1024;font-size:11px;font-weight:700;margin-bottom:8px;
+  }
+  .card p{margin:5px 0;font-size:13px;color:#4b5563;line-height:1.6}
+  table{
+    width:100%;border-collapse:collapse;font-size:13px;
+    overflow:hidden;border-radius:12px;
+  }
+  th,td{border:1px solid #eceff3;padding:10px 10px;vertical-align:top}
+  th{background:#faf4f5;color:#7f0014;text-align:left}
+  td{color:#374151;line-height:1.55}
+  .gap{color:#b00020;font-weight:700}
+  .right{display:grid;grid-template-rows:250px 1fr;gap:16px}
+  .diagram{
+    height:100%;border:1px dashed #d8a4ad;border-radius:14px;
+    background:linear-gradient(180deg,#fff7f8 0%,#ffffff 100%);
+    padding:14px;
+  }
+  .diagcap{font-size:13px;color:#7a7f89;margin-bottom:10px}
+  .boxes{
+    display:grid;grid-template-columns:1fr;gap:10px;
+  }
+  .mini{
+    border:1px solid #eed8dc;border-radius:12px;background:#fff;padding:12px;
+  }
+  .mini strong{display:block;font-size:16px;color:#1f2937;margin-bottom:6px}
+  .mini span{font-size:12px;color:#6b7280;line-height:1.5}
+  .judge{
+    display:grid;gap:10px;
+  }
+  .judge-item{
+    display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;
+    background:#fff7f8;border-radius:12px;padding:10px 12px;
+  }
+  .badge{
+    width:28px;height:28px;border-radius:50%;background:#9f1024;color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;
+  }
+  .judge-item div{font-size:13px;color:#4b5563;line-height:1.6}
+  .judge-item b{color:#1f2937}
+  .footer{
+    position:absolute;left:42px;right:42px;bottom:18px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:12px;color:#7a7f89;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="topline"></div>
+
+  <div class="header">
+    <div>
+      <div class="title">华为昇腾 CANN 生态社区：官方AI辅助现状与缺口</div>
+      <div class="subtitle">Official AI-assisted Capabilities for Ascend Operator Development and Tuning</div>
+    </div>
+    <div class="brand">
+      <div class="main">HUAWEI Ascend</div>
+      <div class="sub">CANN / MindStudio / AOE</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    一句话结论：昇腾已具备“研发助手 + 可视化工具 + 自动调优”的官方基础，但在“算子专用AI问答、Profile自然语言诊断、交互式优化闭环”方面仍明显弱于 CUDA 官方体系。
+  </div>
+
+  <div class="content">
+    <div class="left">
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>当前官方能力：已有基础，但专用性不足</div>
+        <div class="cards">
+          <div class="card">
+            <div class="tag">通用研发AI助手</div>
+            <h3>CodeArts</h3>
+            <p><b>官方定位：</b>研发流程智能化工具，覆盖代码生成、解释、调试、优化、单测生成等。</p>
+            <p><b>与算子开发关系：</b>可为 Ascend C / C++ 开发提供通用编码辅助，但其公开口径仍偏“通用研发助手”，非算子调测专用 AI。</p>
+          </div>
+          <div class="card">
+            <div class="tag">官方开发平台</div>
+            <h3>MindStudio / MindStudio Insight</h3>
+            <p><b>官方定位：</b>覆盖训练、推理、算子开发、异常检测、算子调优、算子调试、可视化分析。</p>
+            <p><b>优势：</b>已形成 operator development / debugging / tuning 的工具链基础。</p>
+          </div>
+          <div class="card">
+            <div class="tag">自动化调优</div>
+            <h3>AOE（Ascend Optimization Engine）</h3>
+            <p><b>官方定位：</b>自动调优工具，通过搜索/优化策略提升性能。</p>
+            <p><b>判断：</b>它是“自动化优化引擎”，但不是面向开发者交互式解释问题的大模型助手。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>与 CUDA 官方 AI 辅助能力对比：主要缺失项</div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width:28%">能力项</th>
+              <th style="width:34%">NVIDIA 官方现状</th>
+              <th>昇腾官方现状判断</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>算子专用 AI 编码助手</td>
+              <td>Nsight Copilot 已明确面向 CUDA 开发</td>
+              <td><span class="gap">缺口：</span>CodeArts 公开口径偏通用研发，缺少面向 Ascend 算子开发的专用官方 AI 品牌/产品形态</td>
+            </tr>
+            <tr>
+              <td>Profile 自然语言诊断</td>
+              <td>Nsight Compute + Copilot 已可解释性能问题</td>
+              <td><span class="gap">缺口：</span>MindStudio / msProf 以数据与可视化为主，缺少“瓶颈原因 → 优化建议”的 AI 对话层</td>
+            </tr>
+            <tr>
+              <td>AI 交互式代码改写</td>
+              <td>支持代码生成、改写、转换</td>
+              <td><span class="gap">缺口：</span>尚未形成面向 Ascend C 算子优化的官方交互式改写闭环</td>
+            </tr>
+            <tr>
+              <td>官方评测基准</td>
+              <td>有 ComputeEval 评测 LLM 的 CUDA 能力</td>
+              <td><span class="gap">缺口：</span>暂无同等公开影响力的“面向 Ascend 算子代码生成”的官方评测框架</td>
+            </tr>
+            <tr>
+              <td>工具链一体化闭环</td>
+              <td>编码、分析、评测逐步贯通</td>
+              <td><span class="gap">现状：</span>已有工具链基础，但 AI 能力尚未深度嵌入“开发—调测—调优—验收”闭环</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>官方示意图位</div>
+        <div class="diagram">
+          <div class="diagcap">建议替换为官方宣传图 / 页面截图：MindStudio、MindStudio Insight、CodeArts、AOE 文档页面</div>
+          <div class="boxes">
+            <div class="mini">
+              <strong>CodeArts</strong>
+              <span>通用代码生成 / 解释 / 调试 / 单测生成</span>
+            </div>
+            <div class="mini">
+              <strong>MindStudio</strong>
+              <span>算子设计、异常检测、调试、调优、可视化分析</span>
+            </div>
+            <div class="mini">
+              <strong>AOE</strong>
+              <span>自动调优引擎，偏参数/策略层优化</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="dot"></span>综合判断</div>
+        <div class="judge">
+          <div class="judge-item">
+            <div class="badge">1</div>
+            <div><b>“有工具”不等于“有专用AI助手”。</b><br/>昇腾在开发与调优工具链上基础并不弱，但 AI 能力尚未像 CUDA 一样深度绑定到算子场景。</div>
+          </div>
+          <div class="judge-item">
+            <div class="badge">2</div>
+            <div><b>短板不在自动化，而在解释与交互。</b><br/>AOE 能做自动优化，但无法像专家一样解释“为什么慢、应该怎么改、改完预计提升多少”。</div>
+          </div>
+          <div class="judge-item">
+            <div class="badge">3</div>
+            <div><b>下一阶段关键不是再做一个通用聊天框。</b><br/>而是把 AI 深度嵌入 Ascend C 算子开发、Profile 诊断、代码改写和效果验收链路。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>参考官方来源：Huawei Cloud CodeArts 页面；Ascend MindStudio 官方页面；Ascend AOE 官方文档/教程。</div>
+    <div>Page 2 / 3</div>
+  </div>
+</div>
+</body>
+</html>
