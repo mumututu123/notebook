@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Page 3 - 昇腾AI能力规划</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:#f4f1f2;
+    font-family:"Segoe UI","Microsoft YaHei",Arial,sans-serif;
+  }
+  .slide{
+    width:1280px;height:720px;margin:0 auto;background:#fff;
+    position:relative;overflow:hidden;padding:34px 42px 24px 42px;
+  }
+  .topline{
+    position:absolute;left:0;top:0;width:100%;height:8px;
+    background:linear-gradient(90deg,#5e0010 0%,#8c0017 45%,#b3001b 100%);
+  }
+  .header{
+    display:flex;justify-content:space-between;align-items:flex-start;
+  }
+  .title{font-size:34px;font-weight:800;color:#231f20}
+  .subtitle{font-size:15px;color:#6f6b6c;margin-top:8px}
+  .brand{text-align:right}
+  .brand .main{font-size:28px;font-weight:800;color:#8c0017}
+  .brand .sub{font-size:13px;color:#7f7b7c;margin-top:6px}
+  .summary{
+    margin-top:16px;
+    background:linear-gradient(90deg,#fff3f5 0%,#ffffff 100%);
+    border:1px solid #f0d0d7;border-radius:12px;
+    padding:12px 16px;color:#7c0014;font-size:18px;font-weight:700;
+  }
+  .content{
+    margin-top:18px;
+    display:grid;grid-template-rows: 1fr 210px;
+    gap:18px;
+  }
+  .roadmap{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  }
+  .card{
+    border:1px solid #ece8ea;border-radius:16px;background:#fff;
+    padding:18px 18px 14px 18px;box-shadow:0 10px 24px rgba(25,20,21,.06);
+    position:relative;
+  }
+  .card::before{
+    content:"";position:absolute;left:0;top:0;width:100%;height:5px;
+    background:linear-gradient(90deg,#7c0014,#b3001b);
+    border-radius:16px 16px 0 0;
+  }
+  .phase{
+    display:inline-block;margin-top:2px;margin-bottom:10px;
+    padding:4px 10px;border-radius:999px;background:#fdf0f2;color:#8c0017;
+    font-size:11px;font-weight:800;
+  }
+  .card h3{margin:0 0 8px 0;font-size:21px;color:#1f2937}
+  .card p{margin:6px 0;font-size:13px;color:#4b5563;line-height:1.6}
+  .list{margin:10px 0 0 0;padding:0;list-style:none}
+  .list li{
+    font-size:13px;color:#374151;line-height:1.55;margin:0 0 8px 0;
+    padding-left:18px;position:relative;
+  }
+  .list li::before{
+    content:"◆";position:absolute;left:0;top:0;color:#9f1024;font-size:12px;
+  }
+  .scene{
+    border:1px solid #eee6e8;border-radius:16px;
+    background:linear-gradient(135deg,#7c0014 0%,#9a0018 60%,#6e0012 100%);
+    color:#fff;padding:18px 20px;
+  }
+  .scene-title{
+    font-size:21px;font-weight:800;margin-bottom:14px;
+  }
+  .scene-grid{
+    display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:16px;align-items:stretch;
+  }
+  .scene-left{
+    border-right:1px solid rgba(255,255,255,.18);padding-right:12px;
+    font-size:14px;line-height:1.7;color:#f9dfe5;
+  }
+  .metric{
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+    border-radius:14px;padding:14px 12px;text-align:center;
+  }
+  .metric .num{font-size:30px;font-weight:800;color:#fff}
+  .metric .lab{font-size:12px;color:#f5d8de;margin-top:8px;line-height:1.5}
+  .footer{
+    position:absolute;left:42px;right:42px;bottom:18px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:12px;color:#7d7a7b;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="topline"></div>
+
+  <div class="header">
+    <div>
+      <div class="title">昇腾算子开发调测：AI智能辅助能力规划与场景价值</div>
+      <div class="subtitle">Roadmap Focused on Closing Gaps in Operator Development, Profiling and Tuning</div>
+    </div>
+    <div class="brand">
+      <div class="main">HUAWEI Ascend</div>
+      <div class="sub">Roadmap Proposal</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    一句话结论：规划重点不是“再做一个通用编码助手”，而是围绕 Ascend C 算子场景，补齐“专用生成、智能诊断、交互优化、效果验收”四段能力闭环。
+  </div>
+
+  <div class="content">
+    <div class="roadmap">
+      <div class="card">
+        <div class="phase">能力方向一｜专用生成</div>
+        <h3>Ascend C 专家助手</h3>
+        <p><b>目标：</b>补齐“算子专用 AI 编码”缺口，面向 Ascend C / CANN 算子开发提供专家级生成与改写能力。</p>
+        <ul class="list">
+          <li>支持算子骨架生成、Tiling 逻辑辅助、模板改写与接口适配。</li>
+          <li>面向昇腾硬件语义进行知识增强，而非仅停留在通用 C/C++ 补全。</li>
+          <li>嵌入 MindStudio，形成“问答—生成—改写—编译验证”闭环。</li>
+        </ul>
+        <p><b>场景价值：</b>降低算子开发门槛，缩短首版可运行代码交付时间。</p>
+      </div>
+
+      <div class="card">
+        <div class="phase">能力方向二｜智能诊断</div>
+        <h3>Profiler AI 诊断层</h3>
+        <p><b>目标：</b>补齐“Profile 数据难解释”缺口，把 msProf / Insight 的指标结果转化为自然语言结论。</p>
+        <ul class="list">
+          <li>支持“瓶颈定位—原因解释—优化建议”三段式输出。</li>
+          <li>围绕访存、流水线、算子并行度、资源利用率形成可操作建议。</li>
+          <li>支持从报告跳转到相关代码片段与文档知识卡片。</li>
+        </ul>
+        <p><b>场景价值：</b>把性能调优从“依赖少数专家经验”变成“团队可复制能力”。</p>
+      </div>
+
+      <div class="card">
+        <div class="phase">能力方向三｜闭环优化</div>
+        <h3>AOE + AI 协同优化闭环</h3>
+        <p><b>目标：</b>补齐“自动调优不解释、不可交互”的缺口，让 AOE 从黑盒工具升级为可对话的优化助手。</p>
+        <ul class="list">
+          <li>支持输出推荐参数背后的原因、适用条件和风险提示。</li>
+          <li>支持多轮交互：开发者提出约束，系统给出替代方案。</li>
+          <li>增加效果验收：改动前后性能对比、版本沉淀与案例复用。</li>
+        </ul>
+        <p><b>场景价值：</b>提升调优效率，构建组织级算子优化知识库。</p>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-title">场景价值落点：形成“开发—调测—调优—沉淀”能力飞轮</div>
+      <div class="scene-grid">
+        <div class="scene-left">
+          针对推荐、CV、NLP、LLM 推理/训练等高频场景，昇腾若补齐上述 AI 辅助能力，可显著提升自定义算子开发效率、
+          缩短性能问题定位路径，并降低对个别资深专家的依赖，最终把社区工具链从“可用”推进到“好用、易复制、可规模化推广”。
+        </div>
+        <div class="metric">
+          <div class="num">30%–50%</div>
+          <div class="lab">首版算子代码开发周期压缩</div>
+        </div>
+        <div class="metric">
+          <div class="num">2–3x</div>
+          <div class="lab">Profile 报告理解与问题定位效率提升</div>
+        </div>
+        <div class="metric">
+          <div class="num">组织资产化</div>
+          <div class="lab">沉淀可复用的调优案例、参数策略和诊断知识</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>建议实施路径：优先做“Profiler AI诊断层 + Ascend C专用知识增强”，再逐步打通 AOE 交互优化与效果验收。</div>
+    <div>Page 3 / 3</div>
+  </div>
+</div>
+</body>
+</html>
