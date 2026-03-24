@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>昇腾 CANN AI 辅助能力规划：进化之路</title>
+    <style>
+        :root {
+            --huawei-red: #c7000b;
+            --huawei-dark-red: #8a0000;
+            --tech-dark: #1a1a1a;
+            --tech-glow: #ff4d4d;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background: #fff;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--huawei-red);
+            background: #fff;
+            z-index: 2;
+        }
+
+        .title-group h1 {
+            font-size: 32px;
+            color: var(--tech-dark);
+            margin: 0;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+        }
+        
+        .title-badge {
+            background: linear-gradient(135deg, var(--huawei-red), var(--huawei-dark-red));
+            color: #fff;
+            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-left: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--huawei-red);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Main Content - The Evolution Path */
+        .content-path {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 60px;
+            background: radial-gradient(circle at center, #ffffff 0%, #f0f2f5 100%);
+        }
+        
+        /* Background Circuit Pattern (Subtle) */
+        .circuit-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.05;
+            background-image: repeating-linear-gradient(45deg, var(--huawei-red) 0, var(--huawei-red) 1px, transparent 0, transparent 50px);
+            z-index: 0;
+        }
+
+        /* Path Connector Line */
+        .path-line {
+            position: absolute;
+            top: 50%;
+            left: 100px;
+            right: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #ddd 0%, var(--huawei-red) 30%, var(--huawei-red) 70%, var(--tech-glow) 100%);
+            transform: translateY(-50%);
+            z-index: 1;
+            box-shadow: 0 0 15px var(--huawei-red);
+        }
+
+        /* Stages */
+        .stage-card {
+            position: relative;
+            width: 26%;
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            z-index: 2;
+            border-top: 4px solid var(--huawei-red);
+            transition: transform 0.3s;
+        }
+        
+        .stage-card:hover { transform: translateY(-8px); }
+
+        .stage-card.active {
+            background: linear-gradient(145deg, #fff, #fff5f5);
+            border: 2px solid var(--huawei-red);
+            box-shadow: 0 15px 35px rgba(199, 0, 11, 0.2);
+        }
+
+        /* Stage Indicators */
+        .stage-step {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--huawei-red);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 0 10px var(--huawei-red);
+        }
+
+        .card-icon {
+            font-size: 36px;
+            margin: 20px 0 15px;
+            text-align: center;
+            color: var(--huawei-red);
+            text-shadow: 0 0 10px rgba(199, 0, 11, 0.3);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--tech-dark);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            background: rgba(0,0,0,0.03);
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .focus-point {
+            font-weight: bold;
+            color: var(--huawei-red);
+        }
+
+        /* Arrow Connectors */
+        .arrow-connector {
+            font-size: 30px;
+            color: var(--huawei-red);
+            z-index: 2;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.6; transform: scale(1); } }
+
+        /* Value Realization Section (Rightmost) */
+        .value-realization {
+            width: 22%;
+            background: linear-gradient(135deg, var(--huawei-red) 0%, var(--tech-dark) 100%);
+            border-radius: 12px;
+            padding: 30px 25px;
+            color: #fff;
+            z-index: 2;
+            box-shadow: 0 15px 35px rgba(199, 0, 11, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .value-realization::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: repeating-linear-gradient(transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 20px);
+            transform: rotate(30deg);
+        }
+
+        .value-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .metric-box {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metric-num {
+            font-size: 38px;
+            font-weight: 900;
+            color: var(--tech-glow);
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+        }
+
+        .metric-lbl {
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title-group">
+                <h1>昇腾 CANN AI 辅助能力规划 <span class="title-badge">Evolution Roadmap</span></h1>
+            </div>
+            <div class="logo">
+                HUAWEI Ascend
+            </div>
+        </div>
+
+        <!-- Main Content: The Path -->
+        <div class="content-path">
+            <div class="circuit-bg"></div>
+            <div class="path-line"></div>
+
+            <!-- Stage 1: Deep Understanding -->
+            <div class="stage-card active">
+                <div class="stage-step">01</div>
+                <div class="card-icon">🧠🔍</div>
+                <div class="card-title">深度内核感知<br>(Deep-Core Perception)</div>
+                <div class="card-desc">
+                    针对“通用大模型不懂昇腾硬件”的痛点。
+                    <br><br>
+                    <strong>规划动作：</strong>基于达芬奇架构指令集微调 Pangu-Coder。
+                    <br><strong>核心能力：</strong>自动生成适配 Cube/Vector 单元的 <span class="focus-point">极致 Tiling策略</span> 与内存对齐代码。
+                </div>
+            </div>
+
+            <div class="arrow-connector">➤</div>
+
+            <!-- Stage 2: Autonomous Diagnosis -->
+            <div class="stage-card active">
+                <div class="stage-step">02</div>
+                <div class="card-icon">🩺📊</div>
+                <div class="card-title">全景自主诊断<br>(Autonomous Diagnosis)</div>
+                <div class="card-desc">
+                    针对“Profiler 数据解读难”的痛点。
+                    <br><br>
+                    <strong>规划动作：</strong>构建多模态性能分析大模型 Agent。
+                    <br><strong>核心能力：</strong>直接阅读图表，以自然语言 <span class="focus-point">精准定位流水线瓶颈</span> 并推荐修复 Patch。
+                </div>
+            </div>
+
+            <div class="arrow-connector">➤</div>
+
+            <!-- Stage 3: Collaborative Tuning -->
+            <div class="stage-card active">
+                <div class="stage-step">03</div>
+                <div class="card-icon">🤝⚡</div>
+                <div class="card-title">人机协作调优<br>(Collaborative Tuning)</div>
+                <div class="card-desc">
+                    针对“AOE 黑盒无法干预”的痛点。
+                    <br><br>
+                    <strong>规划动作：</strong>打造交互式 AOE Chat 引擎。
+                    <br><strong>核心能力：</strong>开发者通过对话 <span class="focus-point">干预搜索空间</span>，实现专家经验与 AI 算力的融合迭代。
+                </div>
+            </div>
+
+            <div class="arrow-connector" style="color: var(--tech-glow);">➤</div>
+
+            <!-- Final Value -->
+            <div class="value-realization">
+                <div class="value-title">场景价值实现<br>Value Realization</div>
+                
+                <div class="metric-box">
+                    <div class="metric-num">50%+</div>
+                    <div class="metric-lbl">算子开发门槛降低<br>Entry Barrier</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-num">3x</div>
+                    <div class="metric-lbl">调优迭代效率提升<br>Tuning Efficiency</div>
+                </div>
+                <div style="text-align: center; font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 10px;">
+                    加速国产大模型原生创新
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
