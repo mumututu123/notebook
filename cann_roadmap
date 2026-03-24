@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>昇腾 CANN 算子开发：AI 辅助能力演进规划</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            background-color: #f5f5f5; /* Light Grey Background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #ffffff;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Decorative Header Bar */
+        .top-bar {
+            height: 8px;
+            background: linear-gradient(90deg, #c7000b 0%, #8a0000 100%);
+            width: 100%;
+        }
+
+        /* Header Section */
+        .header {
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .title-group h1 {
+            font-size: 34px;
+            color: #333;
+            margin: 0;
+            font-weight: 800;
+        }
+
+        .title-group h2 {
+            font-size: 18px;
+            color: #c7000b; /* Huawei Red */
+            margin: 8px 0 0 0;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #c7000b;
+            border-radius: 50% 50% 0 0; /* Petal shape abstract */
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 40px 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Planning Cards Container */
+        .planning-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            height: 60%;
+        }
+
+        .plan-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-top: 4px solid #c7000b;
+            border-radius: 4px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(199, 0, 11, 0.15);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #c7000b;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .card-badge {
+            background-color: #fceceb;
+            color: #c7000b;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            align-self: flex-start;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Visualizing the "Gap Filling" */
+        .feature-list {
+            margin-top: 15px;
+            padding-left: 0;
+            list-style: none;
+        }
+        
+        .feature-list li {
+            font-size: 13px;
+            color: #444;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: #c7000b;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Scenario Value Section (Bottom) */
+        .value-section {
+            background: linear-gradient(135deg, #c7000b 0%, #a60009 100%);
+            border-radius: 8px;
+            padding: 25px 40px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 25%;
+        }
+
+        .value-text {
+            flex: 1;
+        }
+
+        .value-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .value-metrics {
+            display: flex;
+            gap: 40px;
+        }
+
+        .metric-item {
+            text-align: left;
+        }
+
+        .metric-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 15px 50px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <div class="top-bar"></div>
+        
+        <!-- Header -->
+        <div class="header">
+            <div class="title-group">
+                <h1>AI 智能辅助能力规划 (Roadmap)</h1>
+                <h2>针对 CANN 算子开发痛点的演进方向</h2>
+            </div>
+            <div class="logo">
+                <div class="logo-icon"></div>
+                HUAWEI Ascend
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            
+            <!-- Three Pillars of Planning -->
+            <div class="planning-grid">
+                
+                <!-- Plan 1: Deep Understanding -->
+                <div class="plan-card">
+                    <div class="card-badge">规划一：架构感知生成</div>
+                    <div class="card-icon">🧠</div>
+                    <div class="card-title">Pangu-Coder for Ascend C</div>
+                    <div class="card-desc">
+                        解决“通用大模型不懂昇腾硬件”的问题。通过对达芬奇架构（Da Vinci Arch）指令集的专项微调，实现专家级代码生成。
+                    </div>
+                    <ul class="feature-list">
+                        <li><strong>硬件感知：</strong>自动生成适配 Cube/Vector 单元的最佳 Tiling 策略。</li>
+                        <li><strong>内存对齐：</strong>智能处理 UB (Unified Buffer) 内存搬运 Bank Conflict。</li>
+                        <li><strong>同步自动补全：</strong>自动插入 PipeBarrier 同步原语。</li>
+                    </ul>
+                </div>
+
+                <!-- Plan 2: Intelligent Diagnosis -->
+                <div class="plan-card">
+                    <div class="card-badge">规划二：智能诊断医生</div>
+                    <div class="card-icon">🩺</div>
+                    <div class="card-title">Profiler AI Assistant</div>
+                    <div class="card-desc">
+                        解决“MSProfiler 数据难读”的问题。引入多模态大模型，直接阅读 Profiling 图表并给出自然语言诊断。
+                    </div>
+                    <ul class="feature-list">
+                        <li><strong>瓶颈定位：</strong>“AICore 利用率低是因为 GM->L1 带宽受限。”</li>
+                        <li><strong>流水线分析：</strong>自动识别 MTE2/MTE3 流水线空泡原因。</li>
+                        <li><strong>一键修复：</strong>针对诊断结果，直接推荐代码修改 Patch。</li>
+                    </ul>
+                </div>
+
+                <!-- Plan 3: Interactive Tuning -->
+                <div class="plan-card">
+                    <div class="card-badge">规划三：交互式调优</div>
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">Interactive AOE Chat</div>
+                    <div class="card-desc">
+                        解决“AOE 黑盒调优难干预”的问题。将 AOE 引擎与 Chatbot 结合，实现人机协作的迭代式调优。
+                    </div>
+                    <ul class="feature-list">
+                        <li><strong>参数推荐：</strong>“建议将 BlockDim 增加至 128 以隐藏延迟。”</li>
+                        <li><strong>仿真预测：</strong>在修改代码前，AI 预测修改后的性能收益。</li>
+                        <li><strong>知识库联动：</strong>关联昇腾社区类似算子的优化案例。</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Bottom: Scenario Value -->
+            <div class="value-section">
+                <div class="value-text">
+                    <span class="value-title">场景价值全景 (Business Value)</span>
+                    <div style="font-size: 14px; opacity: 0.9; max-width: 600px;">
+                        通过构建全栈 AI 辅助工具链，降低昇腾算子开发门槛，加速大模型国产化适配进程，实现从“能用”到“好用”的跨越。
+                    </div>
+                </div>
+                
+                <div class="value-metrics">
+                    <div class="metric-item">
+                        <div class="metric-number">50%↓</div>
+                        <div class="metric-label">算子开发门槛<br>(Entry Barrier)</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-number">3x</div>
+                        <div class="metric-label">性能调优效率<br>(Tuning Efficiency)</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-number">100%</div>
+                        <div class="metric-label">核心算子覆盖<br>(Key Kernels)</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div>规划周期：2026 Q3 - 2027 Q1</div>
+            <div>内部参考资料 | 华为技术有限公司</div>
+        </div>
+    </div>
+
+</body>
+</html>
