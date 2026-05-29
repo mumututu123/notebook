@@ -1,0 +1,135 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinLab 完整验证过程 IT 时序图</title>
+  <style>
+    body { margin: 0; font-family: "Segoe UI", "Microsoft YaHei", sans-serif; background: #f5f7fb; color: #1f2937; }
+    .wrap { max-width: 1400px; margin: 24px auto; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #dbe2ea; border-radius: 12px; padding: 16px; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06); }
+    h1 { font-size: 24px; margin: 0 0 8px; }
+    p { margin: 0 0 12px; color: #4b5563; }
+    .mermaid { overflow-x: auto; }
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>LinLab 湖仓平台完整验证过程 IT 时序图</h1>
+      <p>范围：环境检查、IAM 鉴权、作业触发、Spark/Ray 计算、Catalog/Iceberg 资产管理、lakeFS 归档、结果回查与 UI 验收。</p>
+      <div class="mermaid">
+sequenceDiagram
+autonumber
+actor U as 验收人(User)
+participant UI as Console(3000)
+participant KC as Keycloak(8088)
+participant API as Platform-API(8090)
+participant DB as SQLite(platform.db)
+participant ORC as Orchestrator
+participant JR as Job-Runner(8070)
+participant SP as Spark
+participant CAT as Iceberg REST Catalog(8181)
+participant ICE as Iceberg Table
+participant RAY as Ray(10001)
+participant LFS as lakeFS(8000)
+participant S3 as MinIO(9000)
+
+rect rgb(245,245,245)
+Note over U,S3: A. 环境与健康检查
+U->>API: GET /healthz
+API-->>U: {"status":"ok"}
+U->>JR: GET /healthz
+JR-->>U: {"status":"ok"}
+end
+
+rect rgb(240,248,255)
+Note over U,KC: B. IAM 鉴权
+U->>KC: POST /realms/linlab/protocol/openid-connect/token\n(username=linuser)
+KC-->>U: access_token
+U->>API: GET /whoami (Bearer token)
+API->>KC: JWKS 校验签名/issuer/audience
+KC-->>API: certs / claims valid
+API-->>U: user=linuser
+end
+
+rect rgb(245,255,245)
+Note over U,DB: C. 作业管理接口验证
+U->>API: GET /jobs
+API->>DB: SELECT jobs
+DB-->>API: daily-lakehouse-pipeline
+API-->>U: jobs 列表
+U->>API: POST /jobs/1/runs {"trigger_type":"manual"}
+API->>DB: INSERT job_runs(status=running)
+API->>ORC: trigger_job(job_id, run_id)
+API-->>U: submitted(run_id)
+end
+
+rect rgb(255,250,240)
+Note over ORC,S3: D. 作业执行主链路（Spark+Ray+Catalog+lakeFS）
+ORC->>JR: POST /run {namespace,table,archive_branch,archive_tag}
+JR->>KC: 获取机器用户 token
+KC-->>JR: access_token
+JR->>API: POST /assets/init (Bearer)
+API->>CAT: POST /v1/namespaces
+CAT-->>API: 200/409
+API-->>JR: namespace ready
+
+JR->>SP: 启动 SparkSession(Iceberg REST Catalog)
+SP->>CAT: CREATE NAMESPACE/TABLE + metadata ops
+CAT->>S3: 读写表元数据与对象
+S3-->>CAT: OK
+CAT-->>SP: OK
+SP->>ICE: INSERT/SELECT bronze.events
+ICE-->>SP: rows
+SP-->>JR: rows(3)
+
+JR->>RAY: ray.init + calc_stats(rows)
+RAY-->>JR: {row_count=3,purchase_count=1,...}
+
+JR->>API: POST /archive/branch
+API->>LFS: create branch(main -> archive-YYYYMMDD)
+LFS-->>API: ready
+API-->>JR: ready
+
+JR->>API: POST /archive/commit
+API->>LFS: commit branch
+LFS-->>API: commit_id or no_changes
+API-->>JR: commit result
+
+JR->>API: POST /archive/tag
+API->>LFS: tag commit
+LFS-->>API: archived
+API-->>JR: archived
+
+JR->>API: GET /assets/list
+API->>CAT: GET namespaces/tables
+CAT-->>API: bronze / bronze.events
+API-->>JR: assets
+JR-->>ORC: 200 {"status":"success","result":...}
+ORC->>DB: UPDATE job_runs(status=success,finished_at,log_text)
+end
+
+rect rgb(255,245,250)
+Note over U,DB: E. 结果回查与 UI 验收
+loop 轮询直到完成
+U->>API: GET /job-runs?limit=10
+API->>DB: SELECT latest runs
+DB-->>API: running/success
+API-->>U: run status
+end
+U->>UI: 登录并查看 Jobs/Runs/Log
+UI->>KC: OIDC Password/Login
+KC-->>UI: token
+UI->>API: 查询 jobs + runs + 触发 run
+API-->>UI: 列表/状态/日志摘要
+end
+      </div>
+    </div>
+  </div>
+</body>
+</html>
