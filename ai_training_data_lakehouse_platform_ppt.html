@@ -1,0 +1,2109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI模型训练数据湖仓作业平台产品规划</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #617083;
+      --line: #d7dde5;
+      --paper: #f6f7f9;
+      --white: #ffffff;
+      --teal: #0f766e;
+      --green: #2f7d32;
+      --amber: #b7791f;
+      --red: #b42318;
+      --blue: #2563eb;
+      --violet: #6d28d9;
+      --shadow: 0 18px 55px rgba(20, 32, 45, .13);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #e9edf2;
+      color: var(--ink);
+      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    .deck {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .slide {
+      display: none;
+      width: min(1280px, 100vw);
+      aspect-ratio: 16 / 9;
+      margin: 0 auto;
+      padding: 54px 64px 42px;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .slide.active { display: block; }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-top: 7px solid var(--teal);
+      pointer-events: none;
+    }
+
+    .slide.alt::before { border-top-color: var(--blue); }
+    .slide.warn::before { border-top-color: var(--amber); }
+    .slide.loop::before { border-top-color: var(--green); }
+    .slide.risk::before { border-top-color: var(--red); }
+
+    .eyebrow {
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: 52px;
+      line-height: 1.08;
+      max-width: 940px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 34px;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 20px;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .lead {
+      font-size: 22px;
+      line-height: 1.55;
+      color: #334155;
+      max-width: 930px;
+      margin-top: 22px;
+    }
+
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .meta {
+      position: absolute;
+      left: 64px;
+      bottom: 34px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .page {
+      position: absolute;
+      right: 64px;
+      bottom: 34px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .cols {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px;
+    }
+
+    .cols.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cols.four { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .cols.wide { grid-template-columns: 1.15fr .85fr; }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      background: #fff;
+      min-height: 136px;
+    }
+
+    .card.tint {
+      background: #f8fafc;
+    }
+
+    .card.accent {
+      border-left: 6px solid var(--teal);
+    }
+
+    .card.blue { border-left: 6px solid var(--blue); }
+    .card.green { border-left: 6px solid var(--green); }
+    .card.amber { border-left: 6px solid var(--amber); }
+    .card.red { border-left: 6px solid var(--red); }
+    .card.violet { border-left: 6px solid var(--violet); }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #2d3a4a;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    li { margin: 7px 0; }
+
+    .big-number {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      color: #334155;
+      background: #f8fafc;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    th {
+      background: #eef3f8;
+      color: #243447;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+
+    .matrix td:first-child, .matrix th:first-child { width: 26%; }
+    .matrix td:nth-child(2), .matrix th:nth-child(2) { width: 38%; }
+
+    .arch {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .layer {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 18px;
+      align-items: center;
+      background: #ffffff;
+    }
+
+    .layer strong {
+      color: #0f4f4a;
+      font-size: 16px;
+    }
+
+    .layer span {
+      color: #334155;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+      align-items: stretch;
+    }
+
+    .journey {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+      align-items: stretch;
+    }
+
+    .journey-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px;
+      min-height: 158px;
+      background: #f8fafc;
+      position: relative;
+    }
+
+    .journey-card::after {
+      content: ">";
+      position: absolute;
+      right: -10px;
+      top: 46%;
+      color: #94a3b8;
+      font-weight: 800;
+    }
+
+    .journey-card:last-child::after { content: ""; }
+
+    .journey-card strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.25;
+      color: #0f4f4a;
+      margin-bottom: 8px;
+    }
+
+    .journey-card p {
+      font-size: 13px;
+      line-height: 1.38;
+      color: #334155;
+    }
+
+    .journey-card.bad {
+      background: #fff7ed;
+      border-color: #fed7aa;
+    }
+
+    .journey-card.bad strong { color: #9a3412; }
+
+    .journey-card.good {
+      background: #f0fdfa;
+      border-color: #99f6e4;
+    }
+
+    .journey-meta {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 12px;
+      align-items: start;
+      margin-top: 14px;
+    }
+
+    .journey-meta .label {
+      font-weight: 800;
+      color: #334155;
+      font-size: 15px;
+      padding-top: 2px;
+    }
+
+    .journey-meta .text {
+      font-size: 15px;
+      line-height: 1.42;
+      color: #334155;
+      border-left: 4px solid var(--line);
+      padding-left: 12px;
+    }
+
+    .split-journey {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .mini-flow {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .mini-step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      line-height: 1.35;
+      background: #fff;
+    }
+
+    .mini-step.bad { border-left: 5px solid var(--red); }
+    .mini-step.good { border-left: 5px solid var(--green); }
+
+    .sequence {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .lane {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      min-height: 315px;
+      overflow: hidden;
+    }
+
+    .lane-title {
+      background: #eef3f8;
+      border-bottom: 1px solid var(--line);
+      padding: 9px 10px;
+      font-weight: 800;
+      color: #243447;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .msg {
+      margin: 10px 8px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: 1px solid #d7dde5;
+      background: #fff;
+      font-size: 12px;
+      line-height: 1.32;
+      color: #334155;
+      min-height: 52px;
+    }
+
+    .msg strong {
+      display: block;
+      color: var(--blue);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .msg.bad {
+      border-color: #fecaca;
+      background: #fff5f5;
+    }
+
+    .msg.bad strong { color: var(--red); }
+
+    .msg.good {
+      border-color: #99f6e4;
+      background: #f0fdfa;
+    }
+
+    .msg.good strong { color: var(--green); }
+
+    .annotations {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .anno {
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      background: #fff;
+      font-size: 13px;
+      line-height: 1.35;
+      color: #334155;
+      min-height: 74px;
+    }
+
+    .anno strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #243447;
+    }
+
+    .anno.bad { border-left: 5px solid var(--red); }
+    .anno.good { border-left: 5px solid var(--green); }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .case-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+      min-height: 232px;
+    }
+
+    .case-visual {
+      height: 82px;
+      border-radius: 8px;
+      border: 1px solid #d7dde5;
+      background: linear-gradient(135deg, #f8fafc, #edf7f5);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 7px;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    .case-visual .node {
+      min-height: 42px;
+      border-radius: 7px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #334155;
+      line-height: 1.15;
+      padding: 4px;
+    }
+
+    .case-card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .case-card p {
+      color: #334155;
+      font-size: 14px;
+      line-height: 1.42;
+      margin-bottom: 9px;
+    }
+
+    .case-tag {
+      display: inline-block;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 5px 8px;
+      color: #475569;
+      background: #f8fafc;
+      font-size: 12px;
+      margin: 2px 4px 0 0;
+    }
+
+    .case-detail {
+      display: grid;
+      grid-template-columns: .72fr 1.28fr;
+      gap: 18px;
+      margin-top: 10px;
+      align-items: stretch;
+    }
+
+    .case-map {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 16px;
+      min-height: 410px;
+    }
+
+    .map-row {
+      display: grid;
+      grid-template-columns: 1fr 26px 1fr;
+      align-items: center;
+      gap: 8px;
+      margin: 11px 0;
+    }
+
+    .map-box {
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.3;
+      color: #334155;
+      min-height: 54px;
+    }
+
+    .map-arrow {
+      color: #64748b;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .case-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .case-point {
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--blue);
+      border-radius: 8px;
+      background: #fff;
+      padding: 13px 14px;
+      min-height: 95px;
+    }
+
+    .case-point.green { border-left-color: var(--green); }
+    .case-point.amber { border-left-color: var(--amber); }
+
+    .case-point strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #243447;
+      font-size: 15px;
+    }
+
+    .case-point span {
+      display: block;
+      color: #334155;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .solution-view {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 18px;
+      margin-top: 8px;
+      align-items: stretch;
+    }
+
+    .solution-map {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 16px;
+      min-height: 440px;
+    }
+
+    .solution-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 10px;
+      align-items: stretch;
+      margin-bottom: 10px;
+    }
+
+    .solution-label {
+      border-radius: 8px;
+      background: #e0f2f1;
+      border: 1px solid #99f6e4;
+      color: #0f4f4a;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 14px;
+      padding: 8px;
+    }
+
+    .solution-caps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .cap {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+      min-height: 54px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.2;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    .solution-side {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .solution-note {
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--blue);
+      border-radius: 8px;
+      background: #fff;
+      padding: 13px 14px;
+      min-height: 90px;
+    }
+
+    .solution-note.green { border-left-color: var(--green); }
+    .solution-note.amber { border-left-color: var(--amber); }
+    .solution-note.red { border-left-color: var(--red); }
+
+    .solution-note strong {
+      display: block;
+      color: #243447;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .solution-note span {
+      color: #334155;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .architecture-view {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .arch-zone {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+      min-height: 430px;
+    }
+
+    .arch-zone h3 {
+      font-size: 18px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 9px;
+      margin-bottom: 12px;
+    }
+
+    .arch-box {
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 13px;
+      line-height: 1.35;
+      color: #334155;
+      min-height: 48px;
+    }
+
+    .arch-box.core {
+      background: #f0fdfa;
+      border-color: #99f6e4;
+      font-weight: 700;
+      color: #0f4f4a;
+    }
+
+    .arch-box.warn {
+      background: #fff8eb;
+      border-color: #f6d58f;
+    }
+
+    .flowline {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .flowline span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: #fff;
+      font-weight: 700;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .value-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 18px;
+      min-height: 205px;
+      border-left: 6px solid var(--teal);
+    }
+
+    .value-card.blue { border-left-color: var(--blue); }
+    .value-card.green { border-left-color: var(--green); }
+    .value-card.amber { border-left-color: var(--amber); }
+
+    .value-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .value-card .mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: var(--teal);
+      font-size: 14px;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .value-card.blue .mark { background: var(--blue); }
+    .value-card.green .mark { background: var(--green); }
+    .value-card.amber .mark { background: var(--amber); }
+
+    .value-card p {
+      font-size: 16px;
+      line-height: 1.45;
+      color: #334155;
+      margin-bottom: 10px;
+    }
+
+    .benefit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .benefit {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #f8fafc;
+      min-height: 182px;
+    }
+
+    .benefit strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #243447;
+    }
+
+    .benefit span {
+      color: #334155;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .final-statement {
+      border-radius: 8px;
+      background: #0f4f4a;
+      color: #fff;
+      padding: 24px 28px;
+      margin-top: 18px;
+      font-size: 27px;
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #f8fafc;
+      min-height: 132px;
+      position: relative;
+    }
+
+    .step::after {
+      content: ">";
+      position: absolute;
+      right: -11px;
+      top: 47%;
+      color: #94a3b8;
+      font-weight: 800;
+    }
+
+    .step:last-child::after { content: ""; }
+
+    .step .label {
+      font-weight: 800;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+
+    .note {
+      border-left: 6px solid var(--amber);
+      background: #fff8eb;
+      padding: 18px 20px;
+      border-radius: 8px;
+      font-size: 18px;
+      line-height: 1.5;
+      color: #3b2f16;
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .phase {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #fff;
+      min-height: 400px;
+    }
+
+    .phase .time {
+      color: #fff;
+      background: var(--teal);
+      display: inline-block;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .phase:nth-child(2) .time { background: var(--blue); }
+    .phase:nth-child(3) .time { background: var(--green); }
+
+    .kbd {
+      position: fixed;
+      right: 22px;
+      bottom: 18px;
+      display: flex;
+      gap: 8px;
+      z-index: 20;
+    }
+
+    button {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px 11px;
+      color: #243447;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, .12);
+    }
+
+    .progress {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      height: 5px;
+      background: var(--teal);
+      width: 0;
+      z-index: 21;
+    }
+
+    .source-list {
+      font-size: 14px;
+      line-height: 1.45;
+      color: #334155;
+    }
+
+    .source-list li { margin: 8px 0; }
+
+    a { color: #1d4ed8; text-decoration: none; }
+
+    @media print {
+      body { background: #fff; }
+      .slide {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+      .kbd, .progress { display: none; }
+    }
+
+    @media (max-width: 900px) {
+      .slide {
+        aspect-ratio: auto;
+        min-height: 100vh;
+        padding: 38px 24px 72px;
+      }
+      h1 { font-size: 36px; }
+      h2 { font-size: 27px; }
+      .lead { font-size: 18px; }
+      .cols, .cols.three, .cols.four, .cols.wide, .roadmap, .flow {
+        grid-template-columns: 1fr;
+      }
+      .step::after { content: ""; }
+      .journey, .split-journey, .journey-meta, .sequence, .annotations, .case-grid, .case-detail, .map-row, .solution-view, .solution-row, .solution-caps, .architecture-view, .value-grid, .benefit-row {
+        grid-template-columns: 1fr;
+      }
+      .journey-card::after { content: ""; }
+      .layer { grid-template-columns: 1fr; gap: 6px; }
+      .meta { left: 24px; }
+      .page { right: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide active">
+      <div class="eyebrow">产品规划演示稿 | AI Training Data Lakehouse Workbench</div>
+      <h1>AI模型训练数据湖仓作业平台</h1>
+      <p class="lead">面向大模型、行业模型与多模态模型训练的数据处理、治理、检索、评测与闭环迭代平台规划。</p>
+      <div class="pill-row">
+        <span class="pill">Catalog</span>
+        <span class="pill">Notebook</span>
+        <span class="pill">Workflow</span>
+        <span class="pill">多模态检索</span>
+        <span class="pill">Plugins</span>
+        <span class="pill">OLAP / BI</span>
+        <span class="pill">AI Agent</span>
+        <span class="pill">Harness</span>
+        <span class="pill">Loops</span>
+      </div>
+      <p class="meta">建议用途：产品立项、架构评审、路线图讨论、年度规划</p>
+      <p class="page">1 / 18</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">Executive Takeaways</div>
+      <h2>关键判断：平台价值不在“存数据”，而在“制造高价值训练数据”</h2>
+      <div class="cols four">
+        <div class="card accent">
+          <div class="big-number">01</div>
+          <h3>训练数据资产化</h3>
+          <ul><li>数据集需要像代码一样版本化、可回滚、可审计。</li><li>每次发布都应形成 dataset commit。</li></ul>
+        </div>
+        <div class="card blue">
+          <div class="big-number">02</div>
+          <h3>多模态成为主战场</h3>
+          <ul><li>文本、图像、视频、音频、文档、代码需要统一处理。</li><li>检索、预览、Embedding、去重必须内建。</li></ul>
+        </div>
+        <div class="card amber">
+          <div class="big-number">03</div>
+          <h3>作业要数据感知</h3>
+          <ul><li>从 cron 调度升级到资产更新、质量门禁、评测触发。</li><li>Workflow 成为训练数据工厂控制面。</li></ul>
+        </div>
+        <div class="card green">
+          <div class="big-number">04</div>
+          <h3>闭环优先于工具堆叠</h3>
+          <ul><li>bad case、线上反馈、评测失败要回流。</li><li>Harness 验证质量，Loops 驱动持续改进。</li></ul>
+        </div>
+      </div>
+      <p class="page">2 / 18</p>
+    </section>
+
+    <section class="slide warn">
+      <div class="eyebrow">High-Value Recommendations</div>
+      <h2>高价值与先进性建议：把平台定位为 AI Data Factory 控制面</h2>
+      <table>
+        <thead><tr><th>建议方向</th><th>应落到产品中的能力</th><th>评审时要证明的价值</th></tr></thead>
+        <tbody>
+          <tr><td>数据集发布制度化</td><td>数据合同、dataset commit、训练数据摘要、发布差异预览、回滚。</td><td>把“临时拼数据”变成可审计、可复现、可比较的生产发布流程。</td></tr>
+          <tr><td>多模态数据策展平台化</td><td>文本、图像、视频、音频、文档统一预览、Embedding、去重、质量评分和抽检。</td><td>减少算法团队重复脚本，把数据选择、过滤和混合策略变成可复用能力。</td></tr>
+          <tr><td>合规证据前置</td><td>来源/授权标签、PII 检测、隐私脱敏、内容凭证、训练内容摘要、策略门禁。</td><td>从事后抽查升级为发布前阻断，支撑客户问询、审计和监管材料生成。</td></tr>
+          <tr><td>评测闭环成为主线</td><td>Harness、bad case 回流、主动学习、重标任务、数据策略 A/B、价值归因。</td><td>证明数据改进与模型效果之间的关系，指导买数、标注、清洗和合成数据投入。</td></tr>
+          <tr><td>受控 Agent 嵌入作业链</td><td>NL2SQL/NL2Workflow、失败诊断、质量建议、dry-run、审批、审计和回滚。</td><td>提升工程效率，同时不突破权限、合规和生产变更红线。</td></tr>
+          <tr><td>训练吞吐纳入平台 KPI</td><td>数据加载吞吐、缓存命中、冷热分层、预取、GPU 等待时间和成本归因。</td><td>避免只优化 ETL 成本，直接降低训练窗口、GPU 闲置和失败重跑成本。</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top: 18px;">落地顺序建议：先做“一个领域数据集从入湖到发布再到 bad case 回流”的端到端闭环，再扩展通用能力和跨团队治理。</div>
+      <p class="page">3 / 18</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Industry Pain Points</div>
+      <h2>模型训练数据作业的普遍痛点</h2>
+      <table class="matrix">
+        <thead>
+          <tr><th>痛点域</th><th>典型表现</th><th>业务影响</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>资产不可发现</td><td>原始数据、标注集、Embedding、评测集、模型日志散落在多系统。</td><td>数据复用低，重复采集和重复清洗严重。</td></tr>
+          <tr><td>不可复现</td><td>训练集版本、切分规则、处理代码、运行环境、标注版本没有绑定。</td><td>模型效果波动无法解释，审计和回滚困难。</td></tr>
+          <tr><td>多模态处理弱</td><td>视频抽帧、OCR、ASR、图片质量、跨模态检索依赖脚本。</td><td>数据准备周期长，算法团队重复造轮子。</td></tr>
+          <tr><td>质量和合规滞后</td><td>去重、污染检测、PII、隐私脱敏、版权、低质样本过滤缺少门禁。</td><td>训练成本浪费，合规和隐私风险前置不足。</td></tr>
+          <tr><td>探索生产割裂</td><td>Notebook 代码难以进入生产 DAG，作业参数和依赖不可控。</td><td>从验证到稳定流水线周期长。</td></tr>
+          <tr><td>数据价值不可度量</td><td>数据集与训练、评测、线上效果没有关联。</td><td>难以决定买数、清洗、标注、合成数据投入优先级。</td></tr>
+        </tbody>
+      </table>
+      <p class="page">3 / 18</p>
+    </section>
+
+    <section class="slide warn">
+      <div class="eyebrow">Pre-Training Case 1</div>
+      <h2>实际痛点案例：训练前数据处理链路失控</h2>
+      <table>
+        <thead><tr><th>场景</th><th>现场问题</th><th>平台应提供的能力</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>多来源语料入湖</td>
+            <td>爬虫、采购、业务日志、开源数据混在对象存储目录中，来源、授权、采集时间和责任人缺失。</td>
+            <td>入湖登记、来源证明、授权标签、Owner、数据域、敏感级别、自动注册 Catalog。</td>
+          </tr>
+          <tr>
+            <td>去重与污染过滤</td>
+            <td>同一网页多次抓取、近似样本大量重复，评测集内容混入训练集，导致训练成本浪费和评测虚高。</td>
+            <td>Exact/MinHash/Embedding 近重复检测、训练/评测隔离规则、污染检测报告、发布门禁。</td>
+          </tr>
+          <tr>
+            <td>多模态预处理</td>
+            <td>视频抽帧、OCR、ASR、图片清晰度过滤由不同团队脚本完成，参数不统一，产物不可比较。</td>
+            <td>标准化算子、参数模板、处理版本、样本级输入输出血缘、可视化抽检。</td>
+          </tr>
+          <tr>
+            <td>标注与自动标注</td>
+            <td>LLM/VLM 预标注结果、人工审核结果、争议样本复审分散在标注系统和表格中。</td>
+            <td>LabelOps、置信度、审核状态、一致性指标、标注版本与训练集版本绑定。</td>
+          </tr>
+          <tr>
+            <td>发布前质量门禁</td>
+            <td>数据集发布依赖人工经验，低质、涉敏、越权、低覆盖样本可能进入训练。</td>
+            <td>质量规则、PII/版权检测、隐私脱敏、覆盖度分析、门禁审批、发布差异预览。</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top: 22px;">产品启示：训练前数据处理不是“跑几个清洗脚本”，而是一个带质量、合规、版本、审批和审计的生产发布流程。</div>
+      <p class="page">4 / 20</p>
+    </section>
+
+    <section class="slide risk">
+      <div class="eyebrow">Pre-Training Case 2</div>
+      <h2>实际痛点案例：模型效果异常后无法追溯</h2>
+      <div class="cols wide">
+        <div class="card red">
+          <h3>典型事故链路</h3>
+          <ul>
+            <li>某次预训练或 SFT 后，模型在特定领域评测分数下降。</li>
+            <li>算法团队只能定位到“用了 v12 训练集”，但不知道新增了哪些来源、哪些过滤规则变化、哪些标注版本被替换。</li>
+            <li>Notebook 临时脚本被覆盖，Workflow 参数没有快照，Embedding 索引与原始样本版本不一致。</li>
+            <li>评测集中部分样本疑似泄漏到训练集，但缺少样本级血缘和去重簇证据。</li>
+            <li>最终只能重新抽样、重跑清洗、人工排查，训练窗口被迫延期。</li>
+          </ul>
+        </div>
+        <div class="card accent">
+          <h3>需要追溯的问题</h3>
+          <ul>
+            <li>这次数据集相比上次新增、删除、重标了哪些样本？</li>
+            <li>每个样本来自哪里，授权和敏感级别是什么？</li>
+            <li>经过哪些算子、模型、Prompt、参数和人工审核？</li>
+            <li>是否与评测集、线上日志、黑名单数据发生污染？</li>
+            <li>哪些数据变化最可能影响某个评测维度？</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flow">
+        <div class="step"><div class="label">Dataset Commit</div><p>绑定输入快照、输出清单、代码、参数、环境。</p></div>
+        <div class="step"><div class="label">Sample Lineage</div><p>样本级血缘追踪到来源、处理算子和标注版本。</p></div>
+        <div class="step"><div class="label">Diff Report</div><p>版本差异、分布变化、质量变化、风险变化。</p></div>
+        <div class="step"><div class="label">Eval Linkage</div><p>关联训练实验、评测集、bad case 和 trace。</p></div>
+        <div class="step"><div class="label">Rollback</div><p>支持复现、回滚和重新发布数据集。</p></div>
+      </div>
+      <p class="page">5 / 20</p>
+    </section>
+
+    <section class="slide risk">
+      <div class="eyebrow">AS-IS Journey</div>
+      <h2>AS-IS：大模型训练前数据作业旅程</h2>
+      <div class="journey">
+        <div class="journey-card bad"><strong>1. 找数据</strong><p>靠群消息、文档、对象存储目录和历史脚本找数据，资产 Owner、授权和适用场景不清楚。</p></div>
+        <div class="journey-card bad"><strong>2. 拉取入湖</strong><p>多团队各自写脚本同步数据，目录命名和分区规则不统一，新增数据难以被自动发现。</p></div>
+        <div class="journey-card bad"><strong>3. 清洗转换</strong><p>Notebook、Shell、Spark 脚本混用，参数靠人工记录，失败重跑依赖个人经验。</p></div>
+        <div class="journey-card bad"><strong>4. 多模态处理</strong><p>OCR、ASR、抽帧、Embedding、去重分别由不同流水线完成，产物版本互相脱节。</p></div>
+        <div class="journey-card bad"><strong>5. 标注审核</strong><p>自动标注和人工标注结果留在外部系统，审核状态、置信度和争议样本无法回写资产目录。</p></div>
+        <div class="journey-card bad"><strong>6. 拼装训练集</strong><p>按临时 SQL 和文件清单拼训练集，训练/评测隔离、版权、PII、低质过滤依赖人工 checklist。</p></div>
+        <div class="journey-card bad"><strong>7. 问题追溯</strong><p>模型效果异常后，只能查日志和询问相关人员，难以定位具体样本、规则、版本和责任链。</p></div>
+      </div>
+      <div class="journey-meta">
+        <div class="label">用户体感</div>
+        <div class="text">数据工程师忙于补脚本和救火，算法工程师等待数据和反复确认口径，治理团队只能事后抽查，管理者看不到数据投入与模型收益的关系。</div>
+        <div class="label">核心断点</div>
+        <div class="text">资产断点、版本断点、样本血缘断点、质量门禁断点、评测反馈断点、成本度量断点。</div>
+      </div>
+      <p class="page">6 / 23</p>
+    </section>
+
+    <section class="slide loop">
+      <div class="eyebrow">TO-BE Journey</div>
+      <h2>TO-BE：平台化后的训练数据作业旅程</h2>
+      <div class="journey">
+        <div class="journey-card good"><strong>1. Catalog 发现</strong><p>按领域、模态、质量、授权、使用历史搜索数据资产，查看 Owner、血缘、风险和消费模型。</p></div>
+        <div class="journey-card good"><strong>2. 受控接入</strong><p>数据接入自动登记来源、授权、敏感级别、schema/格式、采集批次和原始快照。</p></div>
+        <div class="journey-card good"><strong>3. Notebook 探索</strong><p>在受权限控制的环境中抽样预览、写 SQL/Python、比较质量和分布，实验过程自动留痕。</p></div>
+        <div class="journey-card good"><strong>4. Workflow 生产</strong><p>将探索逻辑固化为参数化 DAG，支持资产触发、重试、回填、缓存、SLA 和资源预算。</p></div>
+        <div class="journey-card good"><strong>5. 智能处理</strong><p>统一执行去重、PII、隐私脱敏、OCR、ASR、抽帧、Embedding、自动标注和质量评分，产物自动注册。</p></div>
+        <div class="journey-card good"><strong>6. 门禁发布</strong><p>发布前生成质量、合规、覆盖、成本和污染检测报告，通过审批后形成 dataset commit。</p></div>
+        <div class="journey-card good"><strong>7. Harness/Loops</strong><p>训练、评测和线上 bad case 回写数据平台，触发重标、再清洗、补采和增量发布。</p></div>
+      </div>
+      <div class="journey-meta">
+        <div class="label">目标体验</div>
+        <div class="text">算法团队用“搜索和候选集”替代“到处问数据”，数据团队用“模板和门禁”替代“脚本救火”，治理团队从事后审计转向发布前拦截。</div>
+        <div class="label">关键结果</div>
+        <div class="text">每个训练数据集都可发现、可解释、可复现、可回滚、可评测、可归因。</div>
+      </div>
+      <p class="page">7 / 23</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">AS-IS vs TO-BE</div>
+      <h2>作业旅程对比：从脚本协作到数据产品生产线</h2>
+      <table>
+        <thead><tr><th>维度</th><th>AS-IS 现状</th><th>TO-BE 目标</th><th>平台关键能力</th></tr></thead>
+        <tbody>
+          <tr><td>数据发现</td><td>靠人、靠目录、靠历史文档。</td><td>按语义、模态、质量、权限、使用记录搜索。</td><td>Catalog、多模态检索、资产画像。</td></tr>
+          <tr><td>处理方式</td><td>Notebook/脚本分散，参数和环境不可控。</td><td>探索可固化为标准 Workflow，运行过程可观测。</td><td>Notebook、Workflow、运行环境快照。</td></tr>
+          <tr><td>多模态链路</td><td>OCR/ASR/抽帧/Embedding 产物分散。</td><td>统一算子、统一产物登记、统一样本级血缘。</td><td>多模态处理插件、Embedding 管理、样本血缘。</td></tr>
+          <tr><td>质量合规</td><td>人工 checklist，发布后发现问题。</td><td>质量、PII、隐私脱敏、版权、污染检测前置为发布门禁。</td><td>质量规则、脱敏策略、策略即代码、审批审计。</td></tr>
+          <tr><td>版本复现</td><td>只能定位到文件目录或大版本号。</td><td>dataset commit 绑定输入、代码、参数、环境、输出和评测。</td><td>版本管理、血缘、差异报告、回滚。</td></tr>
+          <tr><td>问题闭环</td><td>评测失败后人工排查，反馈难回流。</td><td>bad case 自动关联样本簇和处理链路，进入重标/再清洗流程。</td><td>Harness、Loops、trace、主动学习。</td></tr>
+          <tr><td>经营管理</td><td>只能看数据量和作业量。</td><td>看单位有效样本成本、质量收益、模型评测贡献。</td><td>OLAP、BI、成本归因、数据价值看板。</td></tr>
+        </tbody>
+      </table>
+      <p class="page">8 / 23</p>
+    </section>
+
+    <section class="slide risk">
+      <div class="eyebrow">AS-IS Sequence</div>
+      <h2>AS-IS 数据作业时序图：人工串联、系统断裂、事后追溯</h2>
+      <div class="sequence">
+        <div class="lane">
+          <div class="lane-title">算法/训练团队</div>
+          <div class="msg bad"><strong>1. 提需求</strong>通过 IM/邮件描述领域、模态、规模和质量要求。</div>
+          <div class="msg bad"><strong>7. 拼训练集</strong>拿到多份文件清单后自行合并、抽样、切分。</div>
+          <div class="msg bad"><strong>10. 反馈异常</strong>训练或评测异常后，回头询问数据来源和处理差异。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">数据工程</div>
+          <div class="msg bad"><strong>2. 找数据</strong>查对象存储目录、历史脚本、表名和团队文档。</div>
+          <div class="msg bad"><strong>4. 跑脚本</strong>用 Notebook/Shell/Spark 临时清洗，参数靠人工记录。</div>
+          <div class="msg bad"><strong>9. 手工交付</strong>输出路径、SQL、文件清单和口头说明分散交付。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">原始数据/湖仓</div>
+          <div class="msg bad"><strong>3. 拉取入湖</strong>新增文件落盘，但来源、授权、批次和 Owner 不完整。</div>
+          <div class="msg bad"><strong>5. 中间产物</strong>清洗结果、抽帧结果、Embedding 分散在不同目录。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">标注/模型服务</div>
+          <div class="msg bad"><strong>6. 预标注</strong>LLM/VLM 预标注和人工审核留在外部系统。</div>
+          <div class="msg bad"><strong>8. 审核导出</strong>导出 CSV/JSON，审核状态和置信度丢失或未同步。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">治理/安全</div>
+          <div class="msg bad"><strong>11. 事后抽查</strong>发布后才检查 PII、版权、评测污染和越权使用。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">管理/运营</div>
+          <div class="msg bad"><strong>12. 看结果</strong>只能看到训练是否完成，难以看到数据成本、质量和收益。</div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="anno bad"><strong>断点 1：需求不可执行</strong>需求没有转成结构化数据合同，范围、质量、权限和验收标准模糊。</div>
+        <div class="anno bad"><strong>断点 2：处理不可复现</strong>脚本、参数、环境、输入快照和输出清单没有形成统一版本。</div>
+        <div class="anno bad"><strong>断点 3：样本不可追溯</strong>标注、Embedding、抽帧、去重簇没有和原始样本稳定关联。</div>
+        <div class="anno bad"><strong>断点 4：反馈不可闭环</strong>训练失败、评测失败和 bad case 不能自动回流到数据再处理流程。</div>
+      </div>
+      <p class="page">9 / 26</p>
+    </section>
+
+    <section class="slide loop">
+      <div class="eyebrow">TO-BE Sequence</div>
+      <h2>TO-BE 数据作业时序图：平台控制面贯穿全链路</h2>
+      <div class="sequence">
+        <div class="lane">
+          <div class="lane-title">算法/训练团队</div>
+          <div class="msg good"><strong>1. 创建需求</strong>在数据集门户提交领域、模态、质量、规模、评测目标。</div>
+          <div class="msg good"><strong>8. 评审候选集</strong>查看样本、分布、风险、差异报告和预估训练成本。</div>
+          <div class="msg good"><strong>12. 消费发布版</strong>通过 dataset commit、API/SDK 或训练平台直接引用。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">湖仓作业平台</div>
+          <div class="msg good"><strong>2. 生成数据合同</strong>固化范围、权限、质量门禁、验收指标和 Owner。</div>
+          <div class="msg good"><strong>5. 编排 Workflow</strong>从 Notebook 固化 DAG，执行去重、PII 扫描、脱敏、OCR/ASR、Embedding。</div>
+          <div class="msg good"><strong>10. 发布门禁</strong>生成质量、合规、脱敏、污染、覆盖、成本和版本差异报告。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">Catalog/Lineage</div>
+          <div class="msg good"><strong>3. 资产匹配</strong>按语义、模态、授权、质量和历史效果推荐候选资产。</div>
+          <div class="msg good"><strong>6. 记录血缘</strong>登记输入快照、算子、参数、环境、输出和样本级链路。</div>
+          <div class="msg good"><strong>11. 形成 Commit</strong>生成可复现、可比较、可回滚的数据集版本。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">计算/插件/模型</div>
+          <div class="msg good"><strong>4. 执行算子</strong>Spark/Ray/GPU 批推理运行标准化处理插件。</div>
+          <div class="msg good"><strong>7. 自动标注</strong>LLM/VLM/ASR 生成预标注，人工审核结果回写。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">治理/安全</div>
+          <div class="msg good"><strong>9. 策略检查</strong>权限、PII、版权、内容凭证、评测污染在发布前拦截。</div>
+        </div>
+        <div class="lane">
+          <div class="lane-title">Harness/Loops</div>
+          <div class="msg good"><strong>13. 关联评测</strong>训练实验、评测结果、trace 和 bad case 绑定数据版本。</div>
+          <div class="msg good"><strong>14. 触发回流</strong>错误样本进入重标、补采、再清洗和增量发布流程。</div>
+        </div>
+      </div>
+      <div class="annotations">
+        <div class="anno good"><strong>控制点 1：需求结构化</strong>把算法需求转成数据合同，成为 Workflow、门禁和验收的输入。</div>
+        <div class="anno good"><strong>控制点 2：处理标准化</strong>Notebook 可探索，Workflow 负责生产，插件负责可复用算子。</div>
+        <div class="anno good"><strong>控制点 3：发布可证明</strong>dataset commit 绑定来源、授权、质量、血缘、差异和评测。</div>
+        <div class="anno good"><strong>控制点 4：反馈可运营</strong>Harness 验证质量，Loops 把失败样本转成下一轮数据任务。</div>
+      </div>
+      <p class="page">10 / 26</p>
+    </section>
+
+    <section class="slide warn">
+      <div class="eyebrow">Strategic Insight</div>
+      <h2>业界趋势：湖仓正在演进为 AI Data Factory</h2>
+      <div class="flow">
+        <div class="step"><div class="label">Lakehouse</div><p>开放表格式、对象存储、ACID、快照、时间旅行、多引擎互操作。</p></div>
+        <div class="step"><div class="label">DataOps</div><p>资产目录、血缘、质量规则、数据合同、策略即代码。</p></div>
+        <div class="step"><div class="label">AI DataOps</div><p>Embedding、自动标注、去重、PII、质量评分、数据选择。</p></div>
+        <div class="step"><div class="label">EvalOps</div><p>评测集、trace、golden set、回归验证、发布门禁。</p></div>
+        <div class="step"><div class="label">Closed Loop</div><p>线上反馈、bad case、主动学习、增量数据集发布。</p></div>
+      </div>
+      <div class="note" style="margin-top: 28px;">产品规划重点：不要把湖仓作业平台做成“数据中台 2.0”，而要围绕模型训练数据的生产、验证和反馈闭环设计。</div>
+      <p class="page">4 / 18</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">Industry Signals</div>
+      <h2>必须纳入规划的业界关键信号</h2>
+      <table>
+        <thead><tr><th>业界信号</th><th>对产品规划的含义</th><th>应落到的平台能力</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>训练数据透明化与版权合规</td>
+            <td>通用 AI 模型需要更清楚地说明训练数据来源、类别、授权和处理过程，数据平台必须能支撑合规证明。</td>
+            <td>来源证明、授权标签、训练数据摘要、审计报告、发布门禁。</td>
+          </tr>
+          <tr>
+            <td>ML 数据集元数据标准化</td>
+            <td>数据集描述正在向可交换、机器可读方向发展，内部 Catalog 应兼容 Dataset Card / Croissant 类元数据。</td>
+            <td>数据集元数据模板、导入导出、语义标签、质量与使用说明。</td>
+          </tr>
+          <tr>
+            <td>多模态内容来源证明</td>
+            <td>图片、视频、音频训练数据需要识别生成来源、编辑历史和可信凭证，避免版权与伪造内容风险。</td>
+            <td>C2PA/Content Credentials 解析、内容凭证校验、篡改和生成标识。</td>
+          </tr>
+          <tr>
+            <td>数据策展成为模型竞争变量</td>
+            <td>过滤、去重、混合配比、难例选择会显著影响训练效果，数据平台要能实验和评测不同数据策略。</td>
+            <td>数据策略实验、数据版本评测、DataComp 类对照实验、价值归因。</td>
+          </tr>
+          <tr>
+            <td>训练吞吐受数据管道制约</td>
+            <td>GPU 训练瓶颈可能来自读取、解码、预处理和缓存，平台 KPI 不能只看 ETL 成本。</td>
+            <td>数据加载吞吐、缓存命中、GPU 等待时间、冷热分层、预取。</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="page">9 / 23</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Industry Cases</div>
+      <h2>业界大厂案例总览：可借鉴的是“控制平面能力”</h2>
+      <div class="case-grid">
+        <div class="case-card">
+          <div class="case-visual"><div class="node">Data</div><div class="node">Catalog</div><div class="node">Govern</div></div>
+          <h3>Databricks Unity Catalog</h3>
+          <p>统一治理数据、模型、特征和函数，强调权限、血缘、审计和跨工作区共享。</p>
+          <span class="case-tag">治理控制面</span><span class="case-tag">血缘</span><span class="case-tag">AI 资产</span>
+        </div>
+        <div class="case-card">
+          <div class="case-visual"><div class="node">Raw</div><div class="node">Dataplex</div><div class="node">Lineage</div></div>
+          <h3>Google Dataplex</h3>
+          <p>围绕数据湖、仓库和对象存储做统一治理，提供数据发现、质量、血缘和策略管理。</p>
+          <span class="case-tag">数据治理</span><span class="case-tag">质量</span><span class="case-tag">元数据</span>
+        </div>
+        <div class="case-card">
+          <div class="case-visual"><div class="node">Dataset</div><div class="node">DataHub</div><div class="node">Owner</div></div>
+          <h3>LinkedIn DataHub</h3>
+          <p>以元数据图谱支撑数据发现、Owner、血缘、治理和数据产品协作，后来开源成为通用元数据平台。</p>
+          <span class="case-tag">元数据图谱</span><span class="case-tag">发现</span><span class="case-tag">协作</span>
+        </div>
+        <div class="case-card">
+          <div class="case-visual"><div class="node">Notebook</div><div class="node">Flow</div><div class="node">Deploy</div></div>
+          <h3>Netflix Metaflow</h3>
+          <p>把数据科学代码组织成可版本化、可扩展、可部署的 Flow，降低从实验到生产的摩擦。</p>
+          <span class="case-tag">ML Workflow</span><span class="case-tag">实验到生产</span>
+        </div>
+        <div class="case-card">
+          <div class="case-visual"><div class="node">Feature</div><div class="node">Train</div><div class="node">Serve</div></div>
+          <h3>Uber Michelangelo</h3>
+          <p>构建端到端机器学习平台，覆盖特征、训练、评估、部署和线上服务，强调标准化生产链路。</p>
+          <span class="case-tag">特征平台</span><span class="case-tag">端到端 ML</span>
+        </div>
+        <div class="case-card">
+          <div class="case-visual"><div class="node">Feature</div><div class="node">Zipline</div><div class="node">Model</div></div>
+          <h3>Airbnb Zipline</h3>
+          <p>面向 ML 的特征平台，强调特征定义、回填、训练/在线一致性和复用。</p>
+          <span class="case-tag">特征工程</span><span class="case-tag">一致性</span><span class="case-tag">复用</span>
+        </div>
+      </div>
+      <p class="page">10 / 29</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">Industry Case Detail</div>
+      <h2>案例一：Databricks / Google / LinkedIn 的元数据与治理实践</h2>
+      <div class="case-detail">
+        <div class="case-map">
+          <h3>简化配图：治理控制面</h3>
+          <div class="map-row"><div class="map-box">数据源<br>表/文件/模型/特征</div><div class="map-arrow">></div><div class="map-box">统一 Catalog<br>元数据图谱</div></div>
+          <div class="map-row"><div class="map-box">作业与消费<br>SQL/Notebook/API</div><div class="map-arrow">></div><div class="map-box">血缘与审计<br>Run/Job/Dataset</div></div>
+          <div class="map-row"><div class="map-box">治理策略<br>RBAC/ABAC/PII</div><div class="map-arrow">></div><div class="map-box">发布门禁<br>质量/合规/共享</div></div>
+          <div class="map-row"><div class="map-box">用户体验<br>搜索/Owner/文档</div><div class="map-arrow">></div><div class="map-box">数据产品<br>可信消费</div></div>
+        </div>
+        <div class="case-list">
+          <div class="case-point">
+            <strong>Databricks Unity Catalog：统一治理 AI 资产</strong>
+            <span>可借鉴点是把表、文件、模型、函数、特征等纳入统一权限、血缘和审计体系。对训练数据湖仓而言，dataset commit、Embedding、标注集、评测集也应进入同一 Catalog。</span>
+          </div>
+          <div class="case-point green">
+            <strong>Google Dataplex：把湖、仓、对象存储放进统一治理域</strong>
+            <span>可借鉴点是跨数据形态的统一发现、质量、血缘和策略。训练数据平台不能只治理表，还要治理原始文件、视频片段、音频转写、图片和文档。</span>
+          </div>
+          <div class="case-point amber">
+            <strong>LinkedIn DataHub：元数据图谱驱动协作</strong>
+            <span>可借鉴点是 Owner、血缘、标签、文档、使用热度和数据产品状态聚合到资产页。对 AI 数据集，资产页还应展示质量、风险、训练消费和评测收益。</span>
+          </div>
+          <div class="note">产品落点：优先自研训练数据语义层，底层 Catalog/Lineage 可兼容 OpenLineage、Iceberg REST Catalog 和主流元数据系统。</div>
+        </div>
+      </div>
+      <p class="page">11 / 29</p>
+    </section>
+
+    <section class="slide loop">
+      <div class="eyebrow">Industry Case Detail</div>
+      <h2>案例二：Netflix / Uber / Airbnb 的 ML 作业工程化实践</h2>
+      <div class="case-detail">
+        <div class="case-map">
+          <h3>简化配图：从实验到生产</h3>
+          <div class="map-row"><div class="map-box">探索<br>Notebook/代码</div><div class="map-arrow">></div><div class="map-box">标准 Flow<br>参数/环境/版本</div></div>
+          <div class="map-row"><div class="map-box">数据处理<br>清洗/特征/样本</div><div class="map-arrow">></div><div class="map-box">训练评估<br>实验/指标/门禁</div></div>
+          <div class="map-row"><div class="map-box">生产调度<br>回填/重试/SLA</div><div class="map-arrow">></div><div class="map-box">服务消费<br>训练/在线/批量</div></div>
+          <div class="map-row"><div class="map-box">反馈<br>线上日志/bad case</div><div class="map-arrow">></div><div class="map-box">下一轮数据<br>重标/补采/再清洗</div></div>
+        </div>
+        <div class="case-list">
+          <div class="case-point">
+            <strong>Netflix Metaflow：降低数据科学到生产的摩擦</strong>
+            <span>可借鉴点是把代码组织为 Flow，内置版本、运行、扩展和部署思路。对应到本平台，就是 Notebook 一键固化为可参数化 Workflow。</span>
+          </div>
+          <div class="case-point green">
+            <strong>Uber Michelangelo：端到端 ML 平台化</strong>
+            <span>可借鉴点是把特征、训练、评估、部署和服务打成标准生产链路。训练数据湖仓应连接训练平台和评测平台，而不是停在 ETL。</span>
+          </div>
+          <div class="case-point amber">
+            <strong>Airbnb Zipline：特征定义、回填和一致性</strong>
+            <span>可借鉴点是统一特征定义和复用，减少训练/在线不一致。对训练数据集，也要管理样本定义、切分规则、回填策略和数据版本一致性。</span>
+          </div>
+          <div class="note">产品落点：Workflow 不只是调度器 UI，而是把数据需求、Notebook、算子、资源、质量门禁、训练消费和反馈闭环串起来的生产控制面。</div>
+        </div>
+      </div>
+      <p class="page">12 / 29</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Solution View</div>
+      <h2>解决方案视图：训练数据从原料到可发布资产</h2>
+      <div class="solution-view">
+        <div class="solution-map">
+          <div class="solution-row">
+            <div class="solution-label">数据输入</div>
+            <div class="solution-caps">
+              <div class="cap">业务库/日志</div><div class="cap">对象存储/文件</div><div class="cap">爬虫/采购</div><div class="cap">线上反馈</div>
+            </div>
+          </div>
+          <div class="solution-row">
+            <div class="solution-label">统一治理</div>
+            <div class="solution-caps">
+              <div class="cap">Catalog</div><div class="cap">权限策略</div><div class="cap">来源授权</div><div class="cap">血缘审计</div>
+            </div>
+          </div>
+          <div class="solution-row">
+            <div class="solution-label">作业生产</div>
+            <div class="solution-caps">
+              <div class="cap">Notebook</div><div class="cap">Workflow</div><div class="cap">Plugins</div><div class="cap">资源调度</div>
+            </div>
+          </div>
+          <div class="solution-row">
+            <div class="solution-label">AI 数据处理</div>
+            <div class="solution-caps">
+              <div class="cap">OCR/ASR/抽帧</div><div class="cap">去重/PII</div><div class="cap">Embedding</div><div class="cap">自动标注</div>
+            </div>
+          </div>
+          <div class="solution-row">
+            <div class="solution-label">发布验证</div>
+            <div class="solution-caps">
+              <div class="cap">合规扫描/脱敏</div><div class="cap">质量门禁</div><div class="cap">污染检测</div><div class="cap">dataset commit</div>
+            </div>
+          </div>
+          <div class="solution-row">
+            <div class="solution-label">消费闭环</div>
+            <div class="solution-caps">
+              <div class="cap">训练平台</div><div class="cap">多模态检索</div><div class="cap">OLAP/BI</div><div class="cap">Loops 回流</div>
+            </div>
+          </div>
+        </div>
+        <div class="solution-side">
+          <div class="solution-note">
+            <strong>面向算法团队</strong>
+            <span>从“到处找数据”变为在数据门户里搜索、筛选、比较、创建候选集，并直接引用已发布数据版本。</span>
+          </div>
+          <div class="solution-note green">
+            <strong>面向数据工程团队</strong>
+            <span>从“脚本交付”变为标准化 Workflow、可复用插件、可观测作业和自动注册资产。</span>
+          </div>
+          <div class="solution-note amber">
+            <strong>面向治理安全团队</strong>
+            <span>从“事后抽查”变为来源、授权、PII、版权、内容凭证、隐私脱敏和评测污染的发布前门禁。</span>
+          </div>
+          <div class="solution-note red">
+            <strong>面向管理者</strong>
+            <span>从“看数据量和任务数”变为看质量、成本、吞吐、可复现率和数据版本带来的模型评测收益。</span>
+          </div>
+        </div>
+      </div>
+      <p class="page">13 / 31</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">Architecture View</div>
+      <h2>架构方案视图：控制平面、数据平面、智能平面分离</h2>
+      <div class="architecture-view">
+        <div class="arch-zone">
+          <h3>数据平面</h3>
+          <div class="arch-box">对象存储：原始文件、图片、音频、视频、文档、Embedding 产物。</div>
+          <div class="arch-box">开放表格式：Iceberg/Delta/Hudi，支撑快照、版本、时间旅行。</div>
+          <div class="arch-box">计算引擎：Spark、Flink、Ray、SQL、GPU 批推理。</div>
+          <div class="arch-box">检索底座：向量库、全文检索、元数据索引、rerank。</div>
+          <div class="arch-box warn">原则：底座可替换，避免把平台锁死在单一计算或存储引擎。</div>
+        </div>
+        <div class="arch-zone">
+          <h3>控制平面</h3>
+          <div class="arch-box core">Catalog：资产、样本集、标注集、评测集、模型输入输出。</div>
+          <div class="arch-box core">Workflow：资产感知调度、重试、回填、质量门禁、SLA。</div>
+          <div class="arch-box core">Dataset Commit：输入快照、代码、参数、环境、输出清单、评测。</div>
+          <div class="arch-box core">治理策略：RBAC/ABAC、PII、版权、内容凭证、隐私脱敏、审计。</div>
+          <div class="arch-box warn">原则：这是产品差异化核心，建议重点自研。</div>
+        </div>
+        <div class="arch-zone">
+          <h3>智能平面</h3>
+          <div class="arch-box">AI Agent：查数据、写 SQL、生成 Workflow、诊断失败。</div>
+          <div class="arch-box">AI 数据处理：OCR、ASR、抽帧、Embedding、自动标注、质量评分、敏感识别。</div>
+          <div class="arch-box">Harness：golden dataset、trace、评测、回归、发布门禁。</div>
+          <div class="arch-box">Loops：bad case、人工反馈、线上日志回流到再清洗和重标。</div>
+          <div class="arch-box warn">原则：Agent 必须受控执行，所有建议有证据、审批和审计。</div>
+        </div>
+      </div>
+      <div class="flowline">
+        <span>数据接入</span> > <span>资产登记</span> > <span>作业处理</span> > <span>质量门禁</span> > <span>版本发布</span> > <span>训练评测</span> > <span>反馈回流</span>
+      </div>
+      <p class="page">14 / 31</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Product Positioning</div>
+      <h2>产品定位与核心用户</h2>
+      <div class="cols wide">
+        <div class="card accent tint">
+          <h3>一句话定位</h3>
+          <p class="lead" style="font-size: 24px; margin-top: 6px;">面向 Foundation Model、行业模型和企业 AI 团队的训练数据湖仓与智能作业控制平面。</p>
+          <div class="pill-row">
+            <span class="pill">数据资产管理</span>
+            <span class="pill">作业生产化</span>
+            <span class="pill">质量合规门禁</span>
+            <span class="pill">数据价值度量</span>
+            <span class="pill">持续反馈闭环</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>目标角色</h3>
+          <ul>
+            <li>数据工程师：接入、清洗、调度、成本、血缘。</li>
+            <li>算法工程师：样本发现、训练集构建、复现。</li>
+            <li>标注运营：任务、审核、一致性、产能。</li>
+            <li>治理安全：权限、PII、版权、审计。</li>
+            <li>平台 SRE：资源、SLA、失败诊断。</li>
+            <li>管理者：质量、成本、吞吐、ROI 看板。</li>
+          </ul>
+        </div>
+      </div>
+      <p class="page">5 / 18</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">Reference Architecture</div>
+      <h2>总体架构：自研控制平面 + 开放底座</h2>
+      <div class="arch">
+        <div class="layer"><strong>消费与协作层</strong><span>数据集门户、多模态搜索、OLAP、BI、API/SDK、Agent Copilot。</span></div>
+        <div class="layer"><strong>智能作业层</strong><span>Notebook、Workflow、资产感知调度、质量门禁、回填、缓存、SLA、成本治理。</span></div>
+        <div class="layer"><strong>AI 数据处理层</strong><span>OCR、ASR、抽帧、Embedding、自动标注、去重、PII、质量评分、数据选择。</span></div>
+        <div class="layer"><strong>治理元数据层</strong><span>Catalog、血缘、权限、标签、数据合同、dataset commit、策略即代码。</span></div>
+        <div class="layer"><strong>计算引擎层</strong><span>Spark、Flink、Ray、SQL 引擎、GPU 批推理、容器化运行时。</span></div>
+        <div class="layer"><strong>湖仓存储层</strong><span>对象存储、开放表格式、表快照、分区、小文件治理、冷热分层。</span></div>
+        <div class="layer"><strong>接入集成层</strong><span>数据库、消息、日志、业务系统、爬虫、标注系统、训练平台、线上反馈。</span></div>
+      </div>
+      <p class="page">6 / 18</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Catalog Design</div>
+      <h2>Catalog：训练数据资产的统一语义层</h2>
+      <div class="cols three">
+        <div class="card accent">
+          <h3>资产对象</h3>
+          <ul>
+            <li>表、文件、样本、样本集。</li>
+            <li>标注集、评测集、Embedding。</li>
+            <li>作业、Notebook、模型输入输出。</li>
+            <li>数据合同、质量规则、发布版本。</li>
+          </ul>
+        </div>
+        <div class="card blue">
+          <h3>核心能力</h3>
+          <ul>
+            <li>搜索、标签、Owner、业务术语。</li>
+            <li>字段级/样本级血缘。</li>
+            <li>权限继承与策略审计。</li>
+            <li>dataset commit 与版本比较。</li>
+          </ul>
+        </div>
+        <div class="card amber">
+          <h3>产品设计重点</h3>
+          <ul>
+            <li>把“可训练数据集”作为一等公民。</li>
+            <li>每个数据集显示质量分、覆盖度、风险、成本、消费模型。</li>
+            <li>支持从检索结果直接创建候选数据集。</li>
+            <li>兼容 Dataset Card / Croissant 类机器可读元数据。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note" style="margin-top: 26px;">关键产品原则：Catalog 不只是资产清单，而是训练数据发布、审计、复现、Agent 安全执行和对外合规证明的事实源。</div>
+      <p class="page">7 / 18</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">Data Contract + Dataset Commit</div>
+      <h2>建议新增硬能力：数据合同与 dataset commit 最小模型</h2>
+      <div class="cols">
+        <div class="card accent">
+          <h3>数据合同：把算法需求转成可执行约束</h3>
+          <ul>
+            <li>用途：预训练、SFT、偏好、评测、RAG、行业精调。</li>
+            <li>范围：领域、模态、语言、时间、地域、授权和禁用来源。</li>
+            <li>质量：去重率、覆盖度、低质阈值、PII/版权规则、污染隔离。</li>
+            <li>验收：目标评测集、样本抽检比例、发布审批人、SLA。</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>dataset commit：让每次发布可复现</h3>
+          <ul>
+            <li>输入：源快照、样本清单、标注版本、评测集隔离清单。</li>
+            <li>处理：代码版本、算子镜像、参数、Prompt、模型服务版本。</li>
+            <li>输出：样本增删改差异、质量报告、风险报告、训练数据摘要。</li>
+            <li>消费：训练实验、模型版本、评测结果、bad case 和回滚点。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flow">
+        <div class="step"><div class="label">Contract</div><p>定义用途、边界、质量、权限和验收。</p></div>
+        <div class="step"><div class="label">Plan</div><p>平台生成候选源、处理 DAG 和成本预估。</p></div>
+        <div class="step"><div class="label">Run</div><p>执行清洗、去重、标注、Embedding 和扫描。</p></div>
+        <div class="step"><div class="label">Gate</div><p>质量、合规、污染、评测门禁统一判定。</p></div>
+        <div class="step"><div class="label">Commit</div><p>发布版本并绑定训练、评测和回流链路。</p></div>
+      </div>
+      <p class="page">8 / 18</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">Notebook + Workflow</div>
+      <h2>从探索到生产：Notebook 与 Workflow 必须打通</h2>
+      <div class="cols">
+        <div class="card accent">
+          <h3>Notebook MVP</h3>
+          <ul>
+            <li>SQL/Python/Ray/Spark 多运行时。</li>
+            <li>结构化表 + 图片/音频/视频/文档样本预览。</li>
+            <li>关联 Catalog、权限、数据快照。</li>
+            <li>记录依赖、环境、输入输出、执行参数。</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Workflow MVP</h3>
+          <ul>
+            <li>DAG、重试、补数、日志、资源队列。</li>
+            <li>作业模板：入湖、清洗、去重、Embedding、标注、发布。</li>
+            <li>质量规则失败自动阻断发布。</li>
+            <li>作业结果自动注册 Catalog。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flow">
+        <div class="step"><div class="label">探索</div><p>Notebook 验证处理逻辑和样本效果。</p></div>
+        <div class="step"><div class="label">参数化</div><p>抽取输入、过滤条件、资源、阈值。</p></div>
+        <div class="step"><div class="label">固化</div><p>转为可调度 Workflow 模板。</p></div>
+        <div class="step"><div class="label">门禁</div><p>绑定质量、合规、评测规则。</p></div>
+        <div class="step"><div class="label">发布</div><p>生成 dataset commit 和消费 API。</p></div>
+      </div>
+      <p class="page">8 / 18</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Multimodal Retrieval</div>
+      <h2>多模态检索：从“找表”升级为“找样本、找语义、找问题”</h2>
+      <table>
+        <thead><tr><th>检索对象</th><th>核心能力</th><th>产品体验</th></tr></thead>
+        <tbody>
+          <tr><td>文本/代码/网页</td><td>关键词、语义向量、语言识别、质量分、去重簇。</td><td>按主题、来源、质量、版权、时间过滤，结果可直接入候选集。</td></tr>
+          <tr><td>图像/文档</td><td>OCR、图文 Embedding、相似图检索、低质图过滤、内容凭证解析。</td><td>支持以图搜图、文本搜图、按标签/风险/清晰度/来源可信度筛选。</td></tr>
+          <tr><td>视频</td><td>抽帧、镜头切分、字幕/ASR、片段向量、关键帧索引、编辑历史。</td><td>按片段定位，显示来源视频、时间码、处理版本和内容凭证状态。</td></tr>
+          <tr><td>音频</td><td>ASR、说话人、语言、噪声评分、声学特征。</td><td>文本搜音频、按时长/语言/噪声/转写置信度过滤。</td></tr>
+          <tr><td>评测/bad case</td><td>模型错误类型、trace、人工反馈、预期答案。</td><td>搜索某类错误，批量回流到重标或再清洗流程。</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top: 22px;">技术策略：关键词检索 + 向量检索 + 元数据过滤 + rerank + 内容来源证明 + 结果可追溯，避免只做“向量库 UI”。</div>
+      <p class="page">9 / 18</p>
+    </section>
+
+    <section class="slide loop">
+      <div class="eyebrow">Data Curation</div>
+      <h2>AI 数据处理能力：把清洗、去重、标注、评测前置为平台能力</h2>
+      <div class="cols four">
+        <div class="card accent"><h3>质量过滤</h3><ul><li>空值、乱码、低清晰度、噪声、低信息量。</li><li>启发式 + 模型评分。</li></ul></div>
+        <div class="card blue"><h3>去重降噪</h3><ul><li>Exact、MinHash、Embedding 近重复。</li><li>跨版本重复率趋势。</li></ul></div>
+        <div class="card amber"><h3>合规治理</h3><ul><li>PII、敏感内容、版权来源、授权标签。</li><li>训练数据摘要和发布前策略门禁。</li></ul></div>
+        <div class="card green"><h3>自动标注</h3><ul><li>LLM/VLM/ASR 预标注。</li><li>人工复核、争议样本、置信度采纳。</li></ul></div>
+      </div>
+      <div class="cols" style="margin-top: 24px;">
+        <div class="card tint">
+          <h3>数据选择</h3>
+          <ul><li>按质量、覆盖度、多样性、难例、领域分布、模型损失贡献选样。</li><li>支持课程学习、主动学习、DataComp 类数据策略对照实验。</li></ul>
+        </div>
+        <div class="card tint">
+          <h3>合成数据治理</h3>
+          <ul><li>真实数据与合成数据隔离标识。</li><li>记录生成模型、Prompt、采样参数、过滤规则、评测结果。</li></ul>
+        </div>
+      </div>
+      <div class="note" style="margin-top: 18px;">能力升级方向：从“清洗规则库”升级到“数据策展实验平台”，可比较不同过滤、去重、混合配比策略对评测结果的影响。</div>
+      <p class="page">10 / 18</p>
+    </section>
+
+    <section class="slide risk">
+      <div class="eyebrow">Compliance & Privacy</div>
+      <h2>数据合规扫描与隐私脱敏：训练数据发布前的硬门禁</h2>
+      <div class="cols three">
+        <div class="card red">
+          <h3>合规扫描对象</h3>
+          <ul>
+            <li>结构化字段：姓名、证件、手机号、地址、账号、设备标识。</li>
+            <li>非结构化文本：聊天记录、邮件、文档、网页、代码注释。</li>
+            <li>多模态内容：图片 OCR、音频 ASR、视频字幕、截图文本。</li>
+            <li>元数据：来源、授权、地域、数据主体、保留期限。</li>
+          </ul>
+        </div>
+        <div class="card amber">
+          <h3>脱敏处理方式</h3>
+          <ul>
+            <li>删除、遮蔽、泛化、哈希、Tokenization、伪匿名化。</li>
+            <li>按场景生成训练可用的安全替代表达。</li>
+            <li>保留脱敏前后映射的权限边界和审计记录。</li>
+            <li>支持样本级风险标签和豁免审批。</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>发布门禁策略</h3>
+          <ul>
+            <li>高风险 PII 默认阻断训练集发布。</li>
+            <li>敏感数据访问继承最小权限和用途限制。</li>
+            <li>导出、共享、Agent 读取前再次策略校验。</li>
+            <li>生成合规扫描报告，绑定 dataset commit。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flow">
+        <div class="step"><div class="label">扫描</div><p>多引擎识别 PII、敏感内容、版权和地域限制。</p></div>
+        <div class="step"><div class="label">分级</div><p>按数据域、敏感级别、用途和风险类型打标签。</p></div>
+        <div class="step"><div class="label">脱敏</div><p>按训练场景选择删除、遮蔽、泛化或伪匿名化。</p></div>
+        <div class="step"><div class="label">审批</div><p>高风险样本进入豁免、复核或隔离流程。</p></div>
+        <div class="step"><div class="label">证明</div><p>扫描结果、策略版本和脱敏产物写入血缘。</p></div>
+      </div>
+      <p class="page">34 / 34</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Plugins</div>
+      <h2>Plugins：控制平台边界，避免自研范围失控</h2>
+      <div class="cols wide">
+        <div>
+          <table>
+            <thead><tr><th>插件类型</th><th>示例</th><th>必须管控</th></tr></thead>
+            <tbody>
+              <tr><td>Connector</td><td>S3/OSS、Kafka、数据库、标注系统、训练平台。</td><td>凭证、数据域、限流、审计。</td></tr>
+          <tr><td>Processor</td><td>OCR、ASR、抽帧、去重、Embedding、PII、脱敏。</td><td>输入输出契约、资源画像、版本。</td></tr>
+              <tr><td>Model Service</td><td>LLM/VLM 自动标注、rerank、质量评分。</td><td>成本、调用日志、敏感数据策略。</td></tr>
+              <tr><td>Quality Rule</td><td>阈值规则、统计漂移、版权规则。</td><td>门禁级别、豁免流程。</td></tr>
+              <tr><td>Visualization</td><td>样本预览、分布图、视频片段视图。</td><td>沙箱、前端安全。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card accent">
+          <h3>插件平台设计</h3>
+          <ul>
+            <li>插件 Manifest：能力、输入输出、权限、资源、版本。</li>
+            <li>SDK：Python/Java/HTTP 三类优先。</li>
+            <li>运行沙箱：网络、凭证、文件、资源隔离。</li>
+            <li>签名与审批：生产环境仅允许运行可信插件。</li>
+            <li>市场：官方、团队内、第三方三层分发。</li>
+          </ul>
+        </div>
+      </div>
+      <p class="page">11 / 18</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">OLAP + BI</div>
+      <h2>OLAP/BI：让训练数据工程可经营</h2>
+      <div class="cols three">
+        <div class="card accent">
+          <h3>数据运营</h3>
+          <ul>
+            <li>数据量、样本增长、来源分布。</li>
+            <li>质量分、重复率、风险样本占比。</li>
+            <li>领域覆盖、语言覆盖、多样性。</li>
+          </ul>
+        </div>
+        <div class="card blue">
+          <h3>作业运营</h3>
+          <ul>
+            <li>作业成功率、SLA、失败原因。</li>
+            <li>CPU/GPU/存储/检索成本。</li>
+            <li>队列等待、重跑、缓存命中。</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>模型闭环</h3>
+          <ul>
+            <li>数据版本与训练实验关联。</li>
+            <li>评测集分数、bad case 类型。</li>
+            <li>数据改进对模型效果的贡献。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note" style="margin-top: 28px;">BI 不只是管理报表。它应服务三个决策：投哪些数据、清洗哪些数据、停止哪些低价值作业。</div>
+      <p class="page">12 / 18</p>
+    </section>
+
+    <section class="slide risk">
+      <div class="eyebrow">AI Agent</div>
+      <h2>AI Agent：从 Copilot 到受控执行代理</h2>
+      <div class="cols wide">
+        <div class="card accent">
+          <h3>高价值场景</h3>
+          <ul>
+            <li>自然语言查找数据集、样本、血缘和质量问题。</li>
+            <li>生成 SQL、Notebook 片段、Workflow 草稿。</li>
+            <li>诊断作业失败，解释成本异常和质量下降。</li>
+            <li>推荐去重、过滤、重标、评测规则。</li>
+            <li>根据 bad case 生成候选回流任务。</li>
+          </ul>
+        </div>
+        <div class="card red">
+          <h3>安全红线</h3>
+          <ul>
+            <li>Agent 继承用户权限，不获得额外数据访问权。</li>
+            <li>生产写操作必须 dry-run、差异预览、审批。</li>
+            <li>所有结论必须引用 Catalog、血缘、日志或样本证据。</li>
+            <li>高风险动作支持回滚和全链路审计。</li>
+            <li>策略引擎可拦截越权、导出、发布、删除和未脱敏样本访问。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pill-row">
+        <span class="pill">NL2SQL</span>
+        <span class="pill">NL2Workflow</span>
+        <span class="pill">Root Cause Analysis</span>
+        <span class="pill">Data Quality Advisor</span>
+        <span class="pill">AgentOps</span>
+        <span class="pill">Human Approval</span>
+      </div>
+      <p class="page">13 / 18</p>
+    </section>
+
+    <section class="slide loop">
+      <div class="eyebrow">Harness + Loops</div>
+      <h2>Harness 负责验证，Loops 负责持续改进</h2>
+      <div class="cols">
+        <div class="card blue">
+          <h3>Harness 工程</h3>
+          <ul>
+            <li>管理 golden dataset、评测集、回归用例。</li>
+            <li>绑定模型版本、数据版本、Prompt、工具调用 trace。</li>
+            <li>执行质量、成本、延迟、安全、合规评分。</li>
+            <li>作为训练集发布和模型发布的质量门禁。</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Loops 闭环</h3>
+          <ul>
+            <li>线上反馈、人工反馈、评测失败样本回流。</li>
+            <li>自动创建重标、再清洗、扩样、合成数据任务。</li>
+            <li>形成 dataset delta，进入下一轮训练或评测。</li>
+            <li>度量每轮数据改进对模型效果的贡献。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="flow">
+        <div class="step"><div class="label">发现问题</div><p>评测失败、线上投诉、低置信度、人工反馈。</p></div>
+        <div class="step"><div class="label">定位样本</div><p>通过 trace、血缘和检索找到相关样本簇。</p></div>
+        <div class="step"><div class="label">处理数据</div><p>重标、过滤、合成、补采、去重、再清洗。</p></div>
+        <div class="step"><div class="label">验证效果</div><p>Harness 回归评测与发布门禁。</p></div>
+        <div class="step"><div class="label">增量发布</div><p>生成 dataset commit，进入训练或微调。</p></div>
+      </div>
+      <p class="page">14 / 18</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Build vs Integrate</div>
+      <h2>自研与集成边界：产品经理必须守住范围</h2>
+      <table>
+        <thead><tr><th>建议自研控制平面</th><th>建议集成底座能力</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>统一资产模型、Catalog 体验、dataset commit、训练数据摘要。</td><td>Iceberg/Delta/Hudi、对象存储、REST Catalog、OpenLineage。</td><td>自研差异在训练数据语义，不在表格式；底座要兼容开放标准。</td></tr>
+          <tr><td>Workflow 产品体验、质量门禁、发布流程。</td><td>Airflow/Dagster/Argo、Spark/Flink/Ray。</td><td>控制面要统一，执行引擎要开放。</td></tr>
+          <tr><td>多模态数据门户、检索 UX、候选集构建。</td><td>Milvus/Qdrant/OpenSearch/Elastic。</td><td>搜索底座可替换，样本工作流是产品壁垒。</td></tr>
+          <tr><td>Agent 安全、审批、审计、上下文编排。</td><td>LLM、Embedding、rerank、评测框架。</td><td>企业信任来自治理，而不是模型调用封装。</td></tr>
+          <tr><td>Harness/Loops 闭环产品。</td><td>MLflow、LangSmith、W&B、标注系统。</td><td>闭环编排是平台核心，单点工具可集成。</td></tr>
+          <tr><td>数据合同、发布门禁、训练数据摘要模板。</td><td>Croissant、Dataset Card、C2PA、合规扫描服务。</td><td>对外标准可兼容，对内语义和审批流程必须产品化。</td></tr>
+          <tr><td>训练吞吐与成本治理体验。</td><td>DALI、Ray Data、对象存储缓存、GPU 监控和成本系统。</td><td>性能底座可集成，但要把 GPU 等待、缓存命中和数据版本成本归因展示给用户。</td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top: 22px;">首期不要同时自研计算引擎、向量数据库、BI、标注系统。优先打通一个高价值数据闭环。</div>
+      <p class="page">15 / 18</p>
+    </section>
+
+    <section class="slide alt">
+      <div class="eyebrow">Roadmap</div>
+      <h2>产品路线图：三阶段推进，按可验收闭环交付</h2>
+      <div class="roadmap">
+        <div class="phase">
+          <span class="time">0-6个月</span>
+          <h3>阶段一：可信发布 MVP</h3>
+          <ul>
+            <li>统一接入、Catalog、基础权限、来源/授权标签。</li>
+            <li>Notebook、Workflow、SQL/OLAP、作业模板。</li>
+            <li>基础多模态预览和处理模板。</li>
+            <li>数据合同、质量门禁、dataset commit、发布差异报告。</li>
+            <li>验收：一个领域数据集可从入湖、清洗、扫描到发布和回滚。</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <span class="time">6-12个月</span>
+          <h3>阶段二：工程化与合规规模化</h3>
+          <ul>
+            <li>dataset commit、血缘、版本对比、训练数据摘要。</li>
+            <li>质量规则、PII、隐私脱敏、去重、数据合同、内容凭证解析。</li>
+            <li>混合检索、Embedding 管理、数据集元数据导入导出。</li>
+            <li>插件 SDK、自动标注、BI 主题域、训练吞吐监控。</li>
+            <li>验收：bad case 可回流到重标/再清洗，并形成增量发布。</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <span class="time">12-24个月</span>
+          <h3>阶段三：智能闭环与价值经营</h3>
+          <ul>
+            <li>受控 Agent、AgentOps、审批回滚。</li>
+            <li>Harness、评测门禁、trace 分析。</li>
+            <li>主动学习、数据选择、合成数据治理、数据策略评测。</li>
+            <li>资源智能调度、成本优化、GPU 数据加载吞吐优化。</li>
+            <li>验收：能比较不同数据策略对评测、成本和训练吞吐的贡献。</li>
+          </ul>
+        </div>
+      </div>
+      <p class="page">16 / 18</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">KPI System</div>
+      <h2>指标体系：用可度量结果管理平台价值</h2>
+      <div class="cols three">
+        <div class="card accent">
+          <h3>效率指标</h3>
+          <ul>
+            <li>数据发现时间：建议目标从天级降到小时级。</li>
+            <li>训练数据集构建周期：建议目标缩短 50% 以上。</li>
+            <li>Notebook 到生产作业转化率：衡量探索沉淀能力。</li>
+            <li>作业成功率与 SLA 达成率：衡量生产稳定性。</li>
+            <li>数据加载吞吐和 GPU 等待时间：衡量训练链路真实效率。</li>
+          </ul>
+        </div>
+        <div class="card blue">
+          <h3>质量指标</h3>
+          <ul>
+            <li>核心数据集可复现率：建议目标接近 100%。</li>
+            <li>血缘覆盖率：样本级、字段级、作业级分层统计。</li>
+            <li>质量规则覆盖率：按数据域和模态拆分。</li>
+            <li>重复数据压缩率、污染拦截率、PII 拦截率、脱敏覆盖率。</li>
+            <li>来源/授权/内容凭证覆盖率：支撑训练内容摘要和审计。</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>价值指标</h3>
+          <ul>
+            <li>单位有效样本成本：采集、清洗、标注、训练消耗合并核算。</li>
+            <li>自动标注采纳率：同时观察人工复核一致性。</li>
+            <li>bad case 闭环周期：从发现到增量发布的时长。</li>
+            <li>数据版本对模型评测提升贡献：按任务、领域、版本归因。</li>
+            <li>不同数据策略实验的评测收益：支持停止低价值数据投入。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note" style="margin-top: 28px;">北极星指标建议：第一阶段看“可信训练数据集发布周期”，第二阶段看“bad case 闭环周期”，第三阶段看“单位有效样本带来的评测收益”。</div>
+      <p class="page">17 / 18</p>
+    </section>
+
+    <section class="slide loop">
+      <div class="eyebrow">Final Clarification</div>
+      <h2>这套系统最终服务什么场景、解决什么问题</h2>
+      <div class="value-grid">
+        <div class="value-card">
+          <h3><span class="mark">1</span>服务的核心场景</h3>
+          <p>服务大模型预训练、SFT、偏好数据构建、多模态训练、行业模型精调、评测集建设和线上 bad case 回流。</p>
+          <ul><li>从原始数据入湖到训练数据集发布。</li><li>从评测失败到数据修复和增量再发布。</li></ul>
+        </div>
+        <div class="value-card blue">
+          <h3><span class="mark">2</span>解决的核心问题</h3>
+          <p>解决训练数据不可发现、不可复现、不可追溯、质量不可控、合规不可证、隐私不可控、成本不可算、反馈不可闭环的问题。</p>
+          <ul><li>把脚本型协作升级为平台化生产。</li><li>把经验型发布升级为门禁型发布。</li></ul>
+        </div>
+        <div class="value-card green">
+          <h3><span class="mark">3</span>达到的目标效果</h3>
+          <p>每个训练数据集都能说明来自哪里、如何处理、质量如何、谁批准、被哪个模型使用、带来什么评测变化。</p>
+          <ul><li>可搜索、可评估、可发布、可回滚。</li><li>可审计、可归因、可持续改进。</li></ul>
+        </div>
+        <div class="value-card amber">
+          <h3><span class="mark">4</span>带来的业务收益</h3>
+          <p>缩短数据集构建周期，降低重复清洗和低质训练成本，提升模型迭代效率，降低合规风险，并沉淀可复用数据资产。</p>
+          <ul><li>从“人找数据”转为“平台供给数据”。</li><li>从“训练后排查”转为“发布前预防”。</li></ul>
+        </div>
+      </div>
+      <p class="page">32 / 33</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Business Outcome</div>
+      <h2>最终收益：让训练数据成为可经营的生产资料</h2>
+      <div class="benefit-row">
+        <div class="benefit">
+          <strong>效率收益</strong>
+          <span>数据发现、清洗、标注、发布、回流形成标准链路，减少跨团队沟通和重复脚本工作，提升训练前准备速度。</span>
+        </div>
+        <div class="benefit">
+          <strong>质量收益</strong>
+          <span>通过去重、污染检测、PII/版权治理、隐私脱敏、质量评分和 Harness 门禁，把低质与高风险数据挡在训练前。</span>
+        </div>
+        <div class="benefit">
+          <strong>成本收益</strong>
+          <span>降低重复样本、无效样本和失败重跑带来的计算浪费，减少 GPU 等待和数据加载瓶颈。</span>
+        </div>
+        <div class="benefit">
+          <strong>合规收益</strong>
+          <span>沉淀来源、授权、内容凭证、合规扫描、脱敏处理链路和训练数据摘要，为审计、监管和客户问询提供证据。</span>
+        </div>
+        <div class="benefit">
+          <strong>模型收益</strong>
+          <span>把数据版本与评测、训练实验、bad case 关联，持续找出真正提升模型效果的数据策略。</span>
+        </div>
+        <div class="benefit">
+          <strong>组织收益</strong>
+          <span>让数据工程、算法、标注、治理、平台团队围绕同一套资产、流程和指标协作。</span>
+        </div>
+      </div>
+      <div class="final-statement">一句话：这不是一个普通湖仓或调度平台，而是面向模型训练的数据生产、验证、发布和反馈闭环系统。</div>
+      <p class="page">33 / 33</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">References</div>
+      <h2>趋势依据与参考技术</h2>
+      <ul class="source-list">
+        <li>Apache Iceberg REST Catalog：以统一 REST API 解决多语言、多引擎 Catalog 兼容问题。<a href="https://iceberg.apache.org/rest-catalog-spec/">iceberg.apache.org/rest-catalog-spec</a></li>
+        <li>Apache Polaris：面向 Iceberg 的开源 Catalog，实现 Iceberg REST API，强调 Spark、Flink、Trino、Doris、StarRocks 等多引擎互操作。<a href="https://polaris.apache.org/">polaris.apache.org</a></li>
+        <li>Ray Data：面向 AI workloads 的可扩展数据处理库，覆盖 batch inference、preprocessing、ML training data loading。<a href="https://docs.ray.io/en/latest/data/data.html">docs.ray.io</a></li>
+        <li>NVIDIA NeMo Curator：面向文本、图像、视频、音频的大规模数据策展平台，包含质量过滤、去重、Embedding 等能力。<a href="https://docs.nvidia.com/nemo/curator/home/welcome">docs.nvidia.com/nemo/curator</a></li>
+        <li>Apache Airflow Asset-Aware Scheduling：支持基于资产更新触发 DAG，体现调度从时间驱动转向数据资产驱动。<a href="https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/asset-scheduling.html">airflow.apache.org</a></li>
+        <li>OpenLineage：开放血缘标准，定义 dataset、job、run 等元数据模型，服务跨系统血缘采集。<a href="https://openlineage.io/docs/">openlineage.io/docs</a></li>
+        <li>MLflow GenAI Evaluation Datasets：通过评测数据集系统化测试和改进 LLM 应用与 Agent。<a href="https://mlflow.org/docs/latest/genai/datasets/">mlflow.org/docs/latest/genai/datasets</a></li>
+        <li>LangSmith Evaluation：围绕 tracing、dataset、evaluator、experiment 支持 LLM/Agent 评测与线上质量监控。<a href="https://docs.langchain.com/langsmith/evaluation">docs.langchain.com/langsmith/evaluation</a></li>
+        <li>EU AI Act Article 53：对通用 AI 模型提出技术文档、版权政策和训练内容摘要等要求，强化训练数据透明化趋势。<a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-53">ai-act-service-desk.ec.europa.eu</a></li>
+        <li>MLCommons Croissant：面向机器学习数据集的标准化元数据格式，支撑数据集发现、交换和治理。<a href="https://mlcommons.org/working-groups/data/croissant/">mlcommons.org/working-groups/data/croissant</a></li>
+        <li>C2PA：开放内容来源和真实性技术标准，可用于多模态训练数据的来源证明与编辑历史识别。<a href="https://c2pa.org/">c2pa.org</a></li>
+        <li>DataComp-LM：用固定训练配方和评测方式比较数据策展策略，说明过滤、去重和数据混合本身是模型竞争变量。<a href="https://arxiv.org/abs/2406.11794">arxiv.org/abs/2406.11794</a></li>
+        <li>NVIDIA DALI：GPU 加速的数据加载与预处理库，提示训练数据平台需要关注数据管道吞吐和 GPU 等待。<a href="https://docs.nvidia.com/deeplearning/dali/user-guide/docs/index.html">docs.nvidia.com/deeplearning/dali</a></li>
+        <li>Databricks Unity Catalog：统一治理数据和 AI 资产，覆盖访问控制、审计、血缘和发现。<a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/">docs.databricks.com</a></li>
+        <li>Google Dataplex：提供跨湖仓的数据治理、元数据、质量和血缘管理。<a href="https://cloud.google.com/dataplex/docs">cloud.google.com/dataplex</a></li>
+        <li>LinkedIn DataHub：LinkedIn 开源的元数据平台，支持数据发现、治理、血缘和协作。<a href="https://datahubproject.io/docs/">datahubproject.io/docs</a></li>
+        <li>Netflix Metaflow：面向数据科学和 ML 的生产化工作流框架，强调从原型到生产的工程化。<a href="https://metaflow.org/">metaflow.org</a></li>
+        <li>Uber Michelangelo：Uber 公开介绍的机器学习平台，覆盖训练、评估、部署和特征管理等端到端能力。<a href="https://www.uber.com/blog/michelangelo-machine-learning-platform/">uber.com/blog/michelangelo-machine-learning-platform</a></li>
+        <li>Airbnb Zipline：Airbnb 公开介绍的 ML 特征平台，强调特征定义、回填、复用和训练/服务一致性。<a href="https://medium.com/airbnb-engineering/zipline-airbnbs-machine-learning-data-management-platform-12e14e91b9b6">medium.com/airbnb-engineering</a></li>
+      </ul>
+      <p class="page">18 / 18</p>
+    </section>
+  </main>
+
+  <div class="kbd">
+    <button type="button" id="prev" aria-label="上一页">Prev</button>
+    <button type="button" id="next" aria-label="下一页">Next</button>
+  </div>
+  <div class="progress" id="progress"></div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const progress = document.getElementById("progress");
+    let index = 0;
+
+    function showSlide(nextIndex) {
+      index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
+      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+      document.title = `${index + 1}/${slides.length} AI模型训练数据湖仓作业平台产品规划`;
+    }
+
+    slides.forEach((slide, i) => {
+      const page = slide.querySelector(".page");
+      if (page) page.textContent = `${i + 1} / ${slides.length}`;
+    });
+
+    document.getElementById("prev").addEventListener("click", () => showSlide(index - 1));
+    document.getElementById("next").addEventListener("click", () => showSlide(index + 1));
+    document.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) showSlide(index + 1);
+      if (["ArrowLeft", "PageUp"].includes(event.key)) showSlide(index - 1);
+      if (event.key === "Home") showSlide(0);
+      if (event.key === "End") showSlide(slides.length - 1);
+    });
+
+    const initialSlide = Number.parseInt(new URLSearchParams(window.location.search).get("slide") || "1", 10);
+    showSlide(Number.isFinite(initialSlide) ? initialSlide - 1 : 0);
+  </script>
+</body>
+</html>
